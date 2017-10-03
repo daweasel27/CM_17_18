@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ProjectoFinal</string>
+    <string name="view_home_page">Ver layout Home Page</string>
+    <string name="view_suggestion_list">Ver layout lista de sugestões</string>
+    <string name="view_movies_suggestions">Ver layout sugestões de filmes</string>
+    <string name="view_trailer">Ver layout trailers</string>
+</resources>
