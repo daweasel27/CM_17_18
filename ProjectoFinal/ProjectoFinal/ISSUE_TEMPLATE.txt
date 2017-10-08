@@ -1,0 +1,18 @@
+For questions or issues related to using one of Affectiva's SDKs, please use StackOverflow with the
+"affdex-sdk" tag.  The Affectiva team monitors StackOverflow for these questions and will respond
+there.  This approach also helps other developers with the same questions or problems find
+solutions more quickly.
+
+https://stackoverflow.com/questions/tagged/affdex-sdk
+
+
+For more general discussion about our SDKs, please use our SDK forum:
+
+https://discuss.affectiva.com/c/emotion-sdk
+
+
+If you have a question or problem directly related to the samples in this repo (not with the SDK
+itself), please proceed to create an issue here.  If you create an issue here that is not
+related to this repo, we will ask you to move it to one of the locations above, as this helps
+ensure it gets to the right people and is addressed most effectively.  Thanks for your
+cooperation.
