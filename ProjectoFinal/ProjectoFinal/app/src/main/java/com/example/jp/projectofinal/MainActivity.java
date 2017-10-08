@@ -22,12 +22,9 @@ public class MainActivity extends AppCompatActivity {
         one.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Camera.class);
-                startActivity(intent);
-            }});
-
-
-
+            Intent intent = new Intent(MainActivity.this, Camera.class);
+            startActivity(intent);
+        }});
     }
 
     @Override
