@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
@@ -8,63 +9,92 @@
     tools:context=".WatchTrailer"
     android:orientation="vertical">
 
-    <fragment
-        android:name="com.google.android.youtube.player.YouTubePlayerFragment"
-        android:id="@+id/youtube"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/sdk_start_button"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="56dp" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/sdk_start_button"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/anger_textview"
-        android:layout_alignBottom="@+id/anger_textview"
-        android:layout_alignParentEnd="true" />
+        <fragment
+            android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+            android:id="@+id/youtube"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/sdk_start_button"
+            android:layout_alignParentEnd="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
-    <ToggleButton
-        android:id="@+id/front_back_toggle_button"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textOff="FRONT"
-        android:textOn="BACK"
-        android:layout_above="@+id/anger_textview"
-        android:layout_alignParentEnd="true" />
+        <Button
+            android:id="@+id/sdk_start_button"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/anger_textview"
+            android:layout_alignBottom="@+id/anger_textview"
+            android:layout_alignParentEnd="true"
+            tools:layout_editor_absoluteY="81dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:visibility="invisible"/>
 
-    <Button
-        android:id="@+id/surfaceview_visibility_button"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        <ToggleButton
+            android:id="@+id/front_back_toggle_button"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textOff="FRONT"
+            android:textOn="BACK"
+            android:layout_above="@+id/anger_textview"
+            android:layout_alignParentEnd="true"
+            tools:layout_editor_absoluteY="81dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:visibility="invisible"/>
 
-    <TextView
-        android:id="@+id/smile_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        tools:text="Smile" />
+        <Button
+            android:id="@+id/surfaceview_visibility_button"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            tools:layout_editor_absoluteY="81dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:visibility="invisible"/>
 
-    <TextView
-        android:id="@+id/joy_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/smile_textview"
-        android:layout_margin="16dp"
-        tools:text="Joy" />
+        <TextView
+            android:id="@+id/smile_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            tools:text="Smile"
+            tools:layout_editor_absoluteY="81dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:visibility="invisible"/>
 
-    <TextView
-        android:id="@+id/anger_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/joy_textview"
-        android:layout_margin="16dp"
-        tools:text="Anger" />
+        <TextView
+            android:id="@+id/joy_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/smile_textview"
+            android:layout_margin="16dp"
+            tools:text="Joy"
+            tools:layout_editor_absoluteY="81dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:visibility="invisible"/>
+
+        <TextView
+            android:id="@+id/anger_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/joy_textview"
+            android:layout_margin="16dp"
+            tools:text="Anger"
+            tools:layout_editor_absoluteY="81dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:visibility="invisible"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+
 
 </RelativeLayout>
 

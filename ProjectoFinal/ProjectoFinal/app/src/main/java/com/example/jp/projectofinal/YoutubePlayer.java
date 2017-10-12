@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ public class YoutubePlayer extends YouTubeFailureRecoveryActivity {
 
     private YouTubePlayerView playerView;
     private String youtube_url;
-    private TextView testTextView;
+    //private TextView testTextView;
 
     // IMPORTANT : CHANGE THIS
     private String DEVELOPER_KEY = "AIzaSyC3GrHmHq_a7MTpXJ2wzO9H5qryoYn7dJw";
@@ -32,7 +33,7 @@ public class YoutubePlayer extends YouTubeFailureRecoveryActivity {
         setContentView(R.layout.activity_youtube_player);
 
         // Just for test
-        testTextView = (TextView) findViewById(R.id.textViewEmotion);
+        //testTextView = (TextView) findViewById(R.id.textViewEmotion);
 
         // The unique video id of the youtube video (can be obtained from video url)
         youtube_url = "hAUTdjf9rko";
@@ -40,7 +41,6 @@ public class YoutubePlayer extends YouTubeFailureRecoveryActivity {
         playerView = (YouTubePlayerView) findViewById(R.id.youtube_player);
         playerView.initialize(DEVELOPER_KEY, this);
 
-        downloadImageAsync();
     }
 
     @Override
@@ -55,43 +55,25 @@ public class YoutubePlayer extends YouTubeFailureRecoveryActivity {
         player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
 
         if (!wasRestored) {
-            player.loadVideo(youtube_url);
+            //player.loadVideo(youtube_url);
+            new MyAsyncTask().execute(player);
         }
     }
 
-    private void downloadImageAsync() {
-        // Now we can execute the long-running task at any time.
-        //new MyAsyncTask().execute("https://media.contentapi.ea.com/content/dam/ea/easports/fifa/home/2017/june/10/fifa18-homepage-marquee-bg-xs.jpg");
-        new MyAsyncTask().execute("Boa textView");
-    }
 
     // The types specified here are the input data type, the progress type, and the result type
-    private class MyAsyncTask extends AsyncTask<String, Void, String> {
+    private class MyAsyncTask extends AsyncTask<YouTubePlayer, Void, Void> {
+        @Override
+        protected Void doInBackground(YouTubePlayer... params) {
+            YouTubePlayer player = params[0];
+            player.loadVideo(youtube_url);
+            return null;
+        }
+
         protected void onPreExecute() {
             // Runs on the UI thread before doInBackground
             // Good for toggling visibility of a progress indicator
-            testTextView.setVisibility(TextView.VISIBLE);
-        }
-
-        protected String doInBackground(String... strings) {
-            Log.d("doInBackground", strings[0]);
-            // Some long-running task like downloading an image.
-            try {
-                /*
-                java.net.URL url = new java.net.URL(strings[0]);
-                HttpURLConnection connection = (HttpURLConnection) url
-                        .openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
-                */
-                return strings[0];
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+            //testTextView.setVisibility(TextView.VISIBLE);
         }
 
         /*
@@ -103,12 +85,13 @@ public class YoutubePlayer extends YouTubeFailureRecoveryActivity {
         */
 
 
-        protected void onPostExecute(String result) {
-            Log.d("OnPostExecute", result);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d("OnPostExecute", "onPost");
             // This method is executed in the UIThread
             // with access to the result of the long running task
             //imageView.setImageBitmap(result);
-            testTextView.setText(result);
+            playerView.setVisibility(View.VISIBLE);
             // Hide the progress bar
             //progressBar.setVisibility(ProgressBar.INVISIBLE);
         }

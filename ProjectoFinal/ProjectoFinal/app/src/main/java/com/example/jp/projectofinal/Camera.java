@@ -1,24 +1,15 @@
 package com.example.jp.projectofinal;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.affectiva.android.affdex.sdk.Frame;
 import com.affectiva.android.affdex.sdk.detector.CameraDetector;
@@ -27,13 +18,9 @@ import com.affectiva.android.affdex.sdk.detector.Face;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.List;
-import java.util.Random;
-
-import static android.R.attr.x;
 
 /**
  * This is a very bare sample app to demonstrate the usage of the CameraDetector object from Affectiva.
@@ -46,23 +33,13 @@ import static android.R.attr.x;
 public class Camera extends YouTubeBaseActivity implements Detector.ImageListener, CameraDetector.CameraEventListener,
         YouTubePlayer.OnInitializedListener {
 
-    final String[] trailers = {"hAUTdjf9rko", "DblEwHkde8U", "ue80QwXMRHg"};
-    // IMPORTANT : CHANGE THIS
     private String DEVELOPER_KEY = "AIzaSyC3GrHmHq_a7MTpXJ2wzO9H5qryoYn7dJw";
 
     final String LOG_TAG = "CameraDetectorDemo";
     private MyPlaybackEventListener playbackEventListener;
 
-    Button startSDKButton;
-    Button surfaceViewVisibilityButton;
-    TextView smileTextView;
-    TextView joyTextView;
-    TextView angerTextView;
-    ToggleButton toggleButton;
-
     SurfaceView cameraPreview;
 
-    boolean isCameraBack = false;
     boolean isSDKStarted = false;
 
     RelativeLayout mainLayout;
@@ -73,8 +50,8 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     int previewHeight = 0;
     static final Integer CAMERA = 0x5;
 
-    //private YouTubePlayerView youtube;
-    private YouTubePlayerFragment myYouTubePlayerFragment;
+    private YouTubePlayerView playerView;
+
     private static final int RECOVERY_REQUEST = 1;
 
     private void askForPermission(String permission, Integer requestCode) {
@@ -86,9 +63,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
                 //This is called if user has denied the permission before
                 //In this case I am just asking the permission again
                 ActivityCompat.requestPermissions(Camera.this, new String[]{permission}, requestCode);
-
             } else {
-
                 ActivityCompat.requestPermissions(Camera.this, new String[]{permission}, requestCode);
             }
         } else {
@@ -100,59 +75,23 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.trailer_watch);
+        setContentView(R.layout.activity_youtube_player);
 
         askForPermission(Manifest.permission.CAMERA, CAMERA);
 
-
-        myYouTubePlayerFragment = (YouTubePlayerFragment)getFragmentManager()
-                .findFragmentById(R.id.youtube);
-
-        myYouTubePlayerFragment.initialize(DEVELOPER_KEY, this);
-        //youtube = (YouTubePlayerView) findViewById(R.id.youtube);
-        //youtube.setVisibility(View.VISIBLE);
-        //youtube.initialize("AIzaSyC3GrHmHq_a7MTpXJ2wzO9H5qryoYn7dJw",this);
+        playerView = (YouTubePlayerView) findViewById(R.id.youtube_player);
+        playerView.initialize(DEVELOPER_KEY, this);
 
         playbackEventListener = new MyPlaybackEventListener();
 
-        smileTextView = (TextView) findViewById(R.id.smile_textview);
-        joyTextView = (TextView) findViewById(R.id.joy_textview);
-        angerTextView = (TextView) findViewById(R.id.anger_textview);
-
-        toggleButton = (ToggleButton) findViewById(R.id.front_back_toggle_button);
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isCameraBack = isChecked;
-                switchCamera(isCameraBack? CameraDetector.CameraType.CAMERA_BACK : CameraDetector.CameraType.CAMERA_FRONT);
-            }
-        });
-
-        startSDKButton = (Button) findViewById(R.id.sdk_start_button);
-        startSDKButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isSDKStarted) {
-                    isSDKStarted = false;
-                    stopDetector();
-
-                    startSDKButton.setText("Start Camera");
-                } else {
-                    isSDKStarted = true;
-                    startDetector();
-                    startSDKButton.setText("Stop Camera");
-                }
-            }
-        });
-        startSDKButton.setText("Start Camera");
-
         //We create a custom SurfaceView that resizes itself to match the aspect ratio of the incoming camera frames
-        mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+        mainLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
+
         cameraPreview = new SurfaceView(this) {
             @Override
             public void onMeasure(int widthSpec, int heightSpec) {
-                int measureWidth = 300;
-                int measureHeight = 450;
+                int measureWidth = 200;
+                int measureHeight = 350;
                 int width;
                 int height;
                 if (previewHeight == 0 || previewWidth == 0) {
@@ -174,32 +113,17 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             }
         };
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ALIGN_TOP,RelativeLayout.TRUE);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params.addRule(RelativeLayout.ALIGN_TOP, RelativeLayout.TRUE);
+        params.addRule(RelativeLayout.ALIGN_LEFT);
         cameraPreview.setLayoutParams(params);
         mainLayout.addView(cameraPreview, 0);
-
-        surfaceViewVisibilityButton = (Button) findViewById(R.id.surfaceview_visibility_button);
-        surfaceViewVisibilityButton.setText("HIDE SURFACE");
-        surfaceViewVisibilityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cameraPreview.getVisibility() == View.VISIBLE) {
-                    cameraPreview.setVisibility(View.INVISIBLE);
-                    surfaceViewVisibilityButton.setText("SHOW SURFACE");
-                    //youtube.setVisibility(View.VISIBLE);
-                } else {
-                    cameraPreview.setVisibility(View.VISIBLE);
-                    surfaceViewVisibilityButton.setText("HIDE SURFACE");
-                    //youtube.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        //mainLayout.bringChildToFront(cameraPreview); // To put facial rec on the front - it pause the video
 
         detector = new CameraDetector(this, CameraDetector.CameraType.CAMERA_FRONT, cameraPreview);
+        /* Features to detect */
         detector.setDetectSmile(true);
-        detector.setDetectAge(true);
-        detector.setDetectEthnicity(true);
+        detector.setDetectAnger(true);
+        detector.setDetectJoy(true);
         detector.setImageListener(this);
         detector.setOnCameraEventListener(this);
     }
@@ -208,8 +132,10 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
         player.setPlaybackEventListener(playbackEventListener);
+        player.setShowFullscreenButton(false);
+        player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
         if (!wasRestored) {
-            player.loadVideo(trailers[new Random().nextInt(trailers.length)]); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
+            new LoadYTVideoAsyncTask().execute(player);
         }
     }
 
@@ -249,27 +175,30 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         }
     }
 
-    void switchCamera(CameraDetector.CameraType type) {
-        detector.setCameraType(type);
-    }
-
     @Override
     public void onImageResults(List<Face> list, Frame frame, float v) {
         if (list == null)
             return;
         if (list.size() == 0) {
-            smileTextView.setText("NO FACE");
-            joyTextView.setText("");
-            angerTextView.setText("");
+            //smileTextView.setText("NO FACE");
+            //joyTextView.setText("");
+            //angerTextView.setText("");
             /*
             Toast toast = Toast.makeText(getApplicationContext(), "Not recognizing a face", Toast.LENGTH_SHORT);
             toast.show();
             */
         } else {
             Face face = list.get(0);
-            smileTextView.setText(String.format("SMILE\n%.2f",face.expressions.getSmile()));
-            joyTextView.setText(String.format("JOY\n%.2f",face.emotions.getJoy()));
-            angerTextView.setText(String.format("ANGER\n%.2f",face.emotions.getAnger()));
+            //smileTextView.setText(String.format("SMILE\n%.2f",face.expressions.getSmile()));
+            //joyTextView.setText(String.format("JOY\n%.2f",face.emotions.getJoy()));
+            //angerTextView.setText(String.format("ANGER\n%.2f",face.emotions.getAnger()));
+
+            Log.d("SMILE", String.format("SMILE\n%.2f",face.expressions.getSmile()));
+            Log.d("JOY", String.format("JOY\n%.2f",face.emotions.getJoy()));
+            Log.d("ANGER",String.format("ANGER\n%.2f",face.emotions.getAnger()));
+
+            //Face feature points coordinates
+            //PointF[] points = face.getFacePoints();
 
             /*
             switch (face.appearance.getAge()) {
@@ -299,7 +228,6 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
                     break;
             }
             */
-
         }
     }
 
@@ -326,21 +254,21 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         @Override
         public void onPlaying() {
             // Called when playback starts, either due to user action or call to play().
-            //showMessage("Playing");
+            showMessage("Playing Facial Recognition");
             startDetector();
         }
 
         @Override
         public void onPaused() {
             // Called when playback is paused, either due to user action or call to pause().
-            //showMessage("Paused");
+            showMessage("Paused Facial Recognition");
             stopDetector();
         }
 
         @Override
         public void onStopped() {
             // Called when playback stops for a reason other than being paused.
-            //showMessage("Stopped");
+            showMessage("Stopped Facial Recognition");
             stopDetector();
         }
 
