@@ -18,4 +18,5 @@
     <string name="ethnicity_south_asian">South Asian</string>
     <string name="ethnicity_hispanic">Hispanic</string>
     <string name="player_error">Error initializing YouTube player: %s</string>
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
 </resources>

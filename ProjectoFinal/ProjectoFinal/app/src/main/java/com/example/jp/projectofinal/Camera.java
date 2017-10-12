@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.SurfaceView;
@@ -42,17 +43,21 @@ import static android.R.attr.x;
  *
  * For use with SDK 2.02
  */
-public class Camera extends YouTubeBaseActivity implements Detector.ImageListener, CameraDetector.CameraEventListener, YouTubePlayer.OnInitializedListener {
+public class Camera extends YouTubeBaseActivity implements Detector.ImageListener, CameraDetector.CameraEventListener,
+        YouTubePlayer.OnInitializedListener {
 
     final String[] trailers = {"hAUTdjf9rko", "DblEwHkde8U", "ue80QwXMRHg"};
+    // IMPORTANT : CHANGE THIS
+    private String DEVELOPER_KEY = "AIzaSyC3GrHmHq_a7MTpXJ2wzO9H5qryoYn7dJw";
 
     final String LOG_TAG = "CameraDetectorDemo";
+    private MyPlaybackEventListener playbackEventListener;
 
     Button startSDKButton;
     Button surfaceViewVisibilityButton;
     TextView smileTextView;
-    TextView ageTextView;
-    TextView ethnicityTextView;
+    TextView joyTextView;
+    TextView angerTextView;
     ToggleButton toggleButton;
 
     SurfaceView cameraPreview;
@@ -68,9 +73,10 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     int previewHeight = 0;
     static final Integer CAMERA = 0x5;
 
-    private YouTubePlayerView youtube;
-    YouTubePlayerFragment myYouTubePlayerFragment;
+    //private YouTubePlayerView youtube;
+    private YouTubePlayerFragment myYouTubePlayerFragment;
     private static final int RECOVERY_REQUEST = 1;
+
     private void askForPermission(String permission, Integer requestCode) {
         if (ContextCompat.checkSelfPermission(Camera.this, permission) != PackageManager.PERMISSION_GRANTED) {
 
@@ -96,18 +102,22 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.trailer_watch);
 
-        askForPermission(Manifest.permission.CAMERA,CAMERA);
+        askForPermission(Manifest.permission.CAMERA, CAMERA);
+
 
         myYouTubePlayerFragment = (YouTubePlayerFragment)getFragmentManager()
                 .findFragmentById(R.id.youtube);
-        myYouTubePlayerFragment.initialize("AIzaSyC3GrHmHq_a7MTpXJ2wzO9H5qryoYn7dJw", this);
+
+        myYouTubePlayerFragment.initialize(DEVELOPER_KEY, this);
         //youtube = (YouTubePlayerView) findViewById(R.id.youtube);
         //youtube.setVisibility(View.VISIBLE);
         //youtube.initialize("AIzaSyC3GrHmHq_a7MTpXJ2wzO9H5qryoYn7dJw",this);
 
+        playbackEventListener = new MyPlaybackEventListener();
+
         smileTextView = (TextView) findViewById(R.id.smile_textview);
-        ageTextView = (TextView) findViewById(R.id.age_textview);
-        ethnicityTextView = (TextView) findViewById(R.id.ethnicity_textview);
+        joyTextView = (TextView) findViewById(R.id.joy_textview);
+        angerTextView = (TextView) findViewById(R.id.anger_textview);
 
         toggleButton = (ToggleButton) findViewById(R.id.front_back_toggle_button);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -167,7 +177,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         params.addRule(RelativeLayout.ALIGN_TOP,RelativeLayout.TRUE);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         cameraPreview.setLayoutParams(params);
-        mainLayout.addView(cameraPreview,0);
+        mainLayout.addView(cameraPreview, 0);
 
         surfaceViewVisibilityButton = (Button) findViewById(R.id.surfaceview_visibility_button);
         surfaceViewVisibilityButton.setText("HIDE SURFACE");
@@ -197,8 +207,9 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+        player.setPlaybackEventListener(playbackEventListener);
         if (!wasRestored) {
-            player.cueVideo(trailers[new Random().nextInt(trailers.length)]); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
+            player.loadVideo(trailers[new Random().nextInt(trailers.length)]); // Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo
         }
     }
 
@@ -248,11 +259,19 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             return;
         if (list.size() == 0) {
             smileTextView.setText("NO FACE");
-            ageTextView.setText("");
-            ethnicityTextView.setText("");
+            joyTextView.setText("");
+            angerTextView.setText("");
+            /*
+            Toast toast = Toast.makeText(getApplicationContext(), "Not recognizing a face", Toast.LENGTH_SHORT);
+            toast.show();
+            */
         } else {
             Face face = list.get(0);
             smileTextView.setText(String.format("SMILE\n%.2f",face.expressions.getSmile()));
+            joyTextView.setText(String.format("JOY\n%.2f",face.emotions.getJoy()));
+            angerTextView.setText(String.format("ANGER\n%.2f",face.emotions.getAnger()));
+
+            /*
             switch (face.appearance.getAge()) {
                 case AGE_UNKNOWN:
                     ageTextView.setText("");
@@ -279,30 +298,11 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
                     ageTextView.setText(R.string.age_over_64);
                     break;
             }
-
-            switch (face.appearance.getEthnicity()) {
-                case UNKNOWN:
-                    ethnicityTextView.setText("");
-                    break;
-                case CAUCASIAN:
-                    ethnicityTextView.setText(R.string.ethnicity_caucasian);
-                    break;
-                case BLACK_AFRICAN:
-                    ethnicityTextView.setText(R.string.ethnicity_black_african);
-                    break;
-                case EAST_ASIAN:
-                    ethnicityTextView.setText(R.string.ethnicity_east_asian);
-                    break;
-                case SOUTH_ASIAN:
-                    ethnicityTextView.setText(R.string.ethnicity_south_asian);
-                    break;
-                case HISPANIC:
-                    ethnicityTextView.setText(R.string.ethnicity_hispanic);
-                    break;
-            }
+            */
 
         }
     }
+
 
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
@@ -315,5 +315,44 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             previewWidth = width;
         }
         cameraPreview.requestLayout();
+    }
+
+    private void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private final class MyPlaybackEventListener implements YouTubePlayer.PlaybackEventListener {
+
+        @Override
+        public void onPlaying() {
+            // Called when playback starts, either due to user action or call to play().
+            //showMessage("Playing");
+            startDetector();
+        }
+
+        @Override
+        public void onPaused() {
+            // Called when playback is paused, either due to user action or call to pause().
+            //showMessage("Paused");
+            stopDetector();
+        }
+
+        @Override
+        public void onStopped() {
+            // Called when playback stops for a reason other than being paused.
+            //showMessage("Stopped");
+            stopDetector();
+        }
+
+        @Override
+        public void onBuffering(boolean b) {
+            // Called when buffering starts or ends.
+        }
+
+        @Override
+        public void onSeekTo(int i) {
+            // Called when a jump in playback position occurs, either
+            // due to user scrubbing or call to seekRelativeMillis() or seekToMillis()
+        }
     }
 }

@@ -21,8 +21,8 @@
         android:id="@+id/sdk_start_button"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/ethnicity_textview"
-        android:layout_alignBottom="@+id/ethnicity_textview"
+        android:layout_alignBaseline="@+id/anger_textview"
+        android:layout_alignBottom="@+id/anger_textview"
         android:layout_alignParentEnd="true" />
 
     <ToggleButton
@@ -32,7 +32,7 @@
         android:padding="5dp"
         android:textOff="FRONT"
         android:textOn="BACK"
-        android:layout_above="@+id/ethnicity_textview"
+        android:layout_above="@+id/anger_textview"
         android:layout_alignParentEnd="true" />
 
     <Button
@@ -48,23 +48,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        tools:text="smile" />
+        tools:text="Smile" />
 
     <TextView
-        android:id="@+id/age_textview"
+        android:id="@+id/joy_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/smile_textview"
         android:layout_margin="16dp"
-        tools:text="age" />
+        tools:text="Joy" />
 
     <TextView
-        android:id="@+id/ethnicity_textview"
+        android:id="@+id/anger_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/age_textview"
+        android:layout_below="@id/joy_textview"
         android:layout_margin="16dp"
-        tools:text="ethnicity" />
+        tools:text="Anger" />
 
 </RelativeLayout>
 

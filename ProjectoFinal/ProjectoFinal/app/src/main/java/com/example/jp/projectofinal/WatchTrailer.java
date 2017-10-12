@@ -19,7 +19,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
  */
 
 public class WatchTrailer  extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
-    public static final String API_KEY = "AIzaSyC3GrHmHq_a7MTpXJ2wzO9H5qryoYn7dJw ";
+    public static final String API_KEY = "AIzaSyC3GrHmHq_a7MTpXJ2wzO9H5qryoYn7dJw";
     public static final String VIDEO_ID = "hAUTdjf9rko";
 
     @Override
