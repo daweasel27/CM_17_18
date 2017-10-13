@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView one = null;
+    private ImageView favsImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +19,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.home_page);
 
         one = (ImageView)findViewById(R.id.imageViewStart);
+        favsImage = (ImageView) findViewById(R.id.imageViewFavorites)   ;
 
         one.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, Camera.class);
             startActivity(intent);
+        }});
+
+        favsImage.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View view) {
+            Intent intentFavs = new Intent(MainActivity.this, SuggestionActivity.class);
+            startActivity(intentFavs);
         }});
     }
 

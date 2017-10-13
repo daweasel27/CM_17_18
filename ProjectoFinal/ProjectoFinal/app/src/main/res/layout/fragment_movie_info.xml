@@ -1,0 +1,192 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_container_movie_info_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.jp.projectofinal.MovieInfoFragment" >
+
+    <TextView
+        android:id="@+id/textViewCantina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Refeitório de Santiago"
+        android:text="Refeitório de Santiago"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="57dp"
+        android:layout_marginLeft="34dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textSize="20dp"
+        android:textColor="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/textViewMealType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="- Almoço"
+        tools:text="- Almoço"
+        app:layout_constraintLeft_toRightOf="@+id/textViewCantina"
+        android:layout_marginLeft="5dp"
+        app:layout_constraintTop_toTopOf="@+id/textViewCantina"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/textViewSopa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sopa:"
+        tools:text="Sopa:"
+        android:layout_marginTop="43dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCantina"
+        android:layout_marginLeft="34dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="15dp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textViewSopaInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Creme de bróculos"
+        android:text="Creme de bróculos"
+        app:layout_constraintLeft_toRightOf="@+id/textViewSopa"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintTop_toTopOf="@+id/textViewSopa"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="13dp"
+        android:layout_marginTop="1.5dp"/>
+
+    <TextView
+        android:id="@+id/textViewPrato"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Prato normal carne:"
+        android:text="Prato normal carne:"
+        app:layout_constraintLeft_toLeftOf="@+id/textViewSopa"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSopa"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="15dp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textViewPratoInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Entrecosto"
+        android:text="Entrecosto"
+        app:layout_constraintLeft_toRightOf="@+id/textViewPrato"
+        app:layout_constraintTop_toTopOf="@+id/textViewPrato"
+        android:layout_marginLeft="10dp"
+        android:textSize="13dp"
+        android:layout_marginTop="1.5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+
+    <TextView
+        android:id="@+id/textViewPratoDieta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prato dieta:"
+        tools:text="Prato dieta:"
+        app:layout_constraintLeft_toLeftOf="@+id/textViewPrato"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPrato"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="15dp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textViewPratoDietaInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Soja"
+        android:text="Soja"
+        app:layout_constraintLeft_toRightOf="@+id/textViewPratoDieta"
+        app:layout_constraintTop_toTopOf="@+id/textViewPratoDieta"
+        android:layout_marginLeft="10dp"
+        android:textSize="13dp"
+        android:layout_marginTop="1.5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <TextView
+        android:id="@+id/textViewSalada"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Salada:"
+        android:text="Salada:"
+        app:layout_constraintLeft_toLeftOf="@+id/textViewPratoDieta"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPratoDieta"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="15dp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textViewSaladaInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Buffet de saladas"
+        android:text="Buffet de saladas"
+        app:layout_constraintLeft_toRightOf="@+id/textViewSalada"
+        app:layout_constraintTop_toTopOf="@+id/textViewSalada"
+        android:layout_marginLeft="10dp"
+        android:textSize="13dp"
+        android:layout_marginTop="1.5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <TextView
+        android:id="@+id/textViewDiversos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Diversos:"
+        android:text="Diversos:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="15dp"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSalada"
+        app:layout_constraintLeft_toLeftOf="@+id/textViewSalada"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/textViewDiversosInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Pão de mistura"
+        android:text="Pão de mistura"
+        app:layout_constraintLeft_toRightOf="@+id/textViewDiversos"
+        app:layout_constraintTop_toTopOf="@+id/textViewDiversos"
+        android:layout_marginLeft="10dp"
+        android:textSize="13dp"
+        android:layout_marginTop="1.5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <TextView
+        android:id="@+id/textViewSobremesa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Sobremesa:"
+        android:text="Sobremesa:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textSize="15dp"
+        android:layout_marginTop="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDiversos"
+        app:layout_constraintLeft_toLeftOf="@+id/textViewDiversos"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textViewSobremesaInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Fruta da época"
+        android:text="Fruta da época"
+        app:layout_constraintLeft_toRightOf="@+id/textViewSobremesa"
+        app:layout_constraintTop_toTopOf="@+id/textViewSobremesa"
+        android:layout_marginLeft="10dp"
+        android:textSize="13dp"
+        android:layout_marginTop="1.5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+</android.support.constraint.ConstraintLayout>
