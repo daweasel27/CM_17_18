@@ -1,7 +1,9 @@
 package com.example.jp.projectofinal;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +23,9 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.List;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
 
 /**
  * This is a very bare sample app to demonstrate the usage of the CameraDetector object from Affectiva.
@@ -45,10 +50,11 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     RelativeLayout mainLayout;
 
     CameraDetector detector;
-
+    saveToFile sv;
     int previewWidth = 0;
     int previewHeight = 0;
     static final Integer CAMERA = 0x5;
+    private static final int RECORD_REQUEST_CODE = 101;
 
     private YouTubePlayerView playerView;
 
@@ -56,10 +62,8 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
 
     private void askForPermission(String permission, Integer requestCode) {
         if (ContextCompat.checkSelfPermission(Camera.this, permission) != PackageManager.PERMISSION_GRANTED) {
-
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(Camera.this, permission)) {
-
                 //This is called if user has denied the permission before
                 //In this case I am just asking the permission again
                 ActivityCompat.requestPermissions(Camera.this, new String[]{permission}, requestCode);
@@ -71,13 +75,45 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         }
     }
 
+    protected void makeRequest() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                RECORD_REQUEST_CODE);
+        //askForPermission(Manifest.permission.CAMERA, CAMERA);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case RECORD_REQUEST_CODE: {
+
+                if (grantResults.length == 0
+                        || grantResults[0] !=
+                        PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                }
+                return;
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube_player);
 
-        askForPermission(Manifest.permission.CAMERA, CAMERA);
+
+        int permission = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            makeRequest();
+        }
+
+        sv = new saveToFile("smile.txt");
 
         playerView = (YouTubePlayerView) findViewById(R.id.youtube_player);
         playerView.initialize(DEVELOPER_KEY, this);
@@ -172,6 +208,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     void stopDetector() {
         if (detector.isRunning()) {
             detector.stop();
+            sv.saveList();
         }
     }
 
@@ -193,41 +230,17 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             //joyTextView.setText(String.format("JOY\n%.2f",face.emotions.getJoy()));
             //angerTextView.setText(String.format("ANGER\n%.2f",face.emotions.getAnger()));
 
-            Log.d("SMILE", String.format("SMILE\n%.2f",face.expressions.getSmile()));
-            Log.d("JOY", String.format("JOY\n%.2f",face.emotions.getJoy()));
-            Log.d("ANGER",String.format("ANGER\n%.2f",face.emotions.getAnger()));
+            //Log.d("SMILE", String.format("SMILE\n%.2f",face.expressions.getSmile()));
+
+            sv.addSmileValue(face.expressions.getSmile());
+
+            //Log.d("JOY", String.format("JOY\n%.2f",face.emotions.getJoy()));
+            //Log.d("ANGER",String.format("ANGER\n%.2f",face.emotions.getAnger()));
 
             //Face feature points coordinates
             //PointF[] points = face.getFacePoints();
 
-            /*
-            switch (face.appearance.getAge()) {
-                case AGE_UNKNOWN:
-                    ageTextView.setText("");
-                    break;
-                case AGE_UNDER_18:
-                    ageTextView.setText(R.string.age_under_18);
-                    break;
-                case AGE_18_24:
-                    ageTextView.setText(R.string.age_18_24);
-                    break;
-                case AGE_25_34:
-                    ageTextView.setText(R.string.age_25_34);
-                    break;
-                case AGE_35_44:
-                    ageTextView.setText(R.string.age_35_44);
-                    break;
-                case AGE_45_54:
-                    ageTextView.setText(R.string.age_45_54);
-                    break;
-                case AGE_55_64:
-                    ageTextView.setText(R.string.age_55_64);
-                    break;
-                case AGE_65_PLUS:
-                    ageTextView.setText(R.string.age_over_64);
-                    break;
-            }
-            */
+
         }
     }
 
