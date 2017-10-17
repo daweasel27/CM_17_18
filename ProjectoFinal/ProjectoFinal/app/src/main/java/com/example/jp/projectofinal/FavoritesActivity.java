@@ -9,7 +9,9 @@ import android.util.Log;
  * Created by TiagoHenriques on 17/10/2017.
  */
 public class FavoritesActivity extends AppCompatActivity
-        implements FavoritesListFragment.OnDaySelectedListener{
+        implements FavoritesListFragment.OnMovieSelectedListener{
+
+    private static final String TAG = "MOVIE_TITLE";
 
     //private TextView textViewTest;
 
@@ -48,15 +50,15 @@ public class FavoritesActivity extends AppCompatActivity
 
 
     @Override
-    public void onDaySelected(String s) {
-        Log.d("ON_DAY_SELECTED", "AIAI");
+    public void onMovieSelected(String s) {
+        Log.d("onMovieSelected", "onMovieSelected");
         setContentView(R.layout.fragment_movie_info);
         MovieInfoFragment detailsFragment = new MovieInfoFragment();
         Bundle args = new Bundle();
-        //args.putString(TAG, s);
+        args.putString(TAG, s);
         // In case this activity was started with special instructions from an
         // Intent, pass the Intent's extras to the fragment as arguments
-        //detailsFragment.setArguments(args);
+        detailsFragment.setArguments(args);
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()

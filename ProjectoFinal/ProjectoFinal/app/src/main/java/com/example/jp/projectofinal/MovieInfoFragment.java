@@ -2,6 +2,7 @@ package com.example.jp.projectofinal;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
  * A simple {@link Fragment} subclass.
  */
 public class MovieInfoFragment extends Fragment {
+
+    private static final String TAG = "MOVIE_TITLE";
 
     public MovieInfoFragment() {
         // Required empty public constructor
@@ -30,6 +33,12 @@ public class MovieInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movie_info, container, false);
+
+
+        Bundle bundle = getArguments();
+        String movie_title = bundle.getString(TAG);
+        Log.i(TAG, movie_title);
+
         return view;
     }
 

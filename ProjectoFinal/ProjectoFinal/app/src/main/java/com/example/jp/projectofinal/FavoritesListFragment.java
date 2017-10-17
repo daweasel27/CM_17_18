@@ -3,7 +3,10 @@ package com.example.jp.projectofinal;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
@@ -18,8 +21,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -33,8 +38,11 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
 
     private ListView listView;
     private MyAdapter myAdapter;
-    private OnDaySelectedListener mListener;
+    private OnMovieSelectedListener mListener;
     private static final String LOG_TAG = "LOG_TAG";
+
+    private static MovieDbHelper dbHelper;
+    private static SQLiteDatabase db;
 
     public FavoritesListFragment() {
         // Required empty public constructor
@@ -47,11 +55,13 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_suggestion_list, container, false);
 
+        dbHelper = new MovieDbHelper(getActivity());
+
         myAdapter = new MyAdapter(
                 getActivity(), // The current context (this activity)
                 new ArrayList<String>());
 
-        final String[] daysLabels = getTheWeatherForecast();
+        final String[] daysLabels = getFavoriteMoviesFromDB();
 
         // IMP...
         myAdapter.clear();
@@ -63,22 +73,23 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
         listView = (ListView) view.findViewById(R.id.list_view);
         listView.setAdapter(myAdapter);
 
-        /*
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s = myAdapter.getItem(position);
+                String s = myAdapter.getItem(position).split("_")[0];
                 Context context = view.getContext();
                 Toast toast = Toast.makeText(context, s, Toast.LENGTH_SHORT);
                 toast.show();
-                mListener.onDaySelected(s);
+                mListener.onMovieSelected(s);
             }
         });
 
-        */
 
         // Just for test
         //addTestDB();
-        returnValuesTestDB("\"The Recruit\"");
+        //returnValuesTestDB("\"The Recruit\"");
+
+        //returnValuesTestDB();
 
         return view;
     }
@@ -87,8 +98,8 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnDaySelectedListener) {
-            mListener = (OnDaySelectedListener) context;
+        if (context instanceof OnMovieSelectedListener) {
+            mListener = (OnMovieSelectedListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnDaySelectedListener");
@@ -96,17 +107,17 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
     }
 
     public void addTestDB(){
-        MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Log.d("addTestDB", "addTestDB");
+        db = dbHelper.getWritableDatabase();
 
         ContentValues testValues = new ContentValues();
 
-        testValues.put(MovieContract.MovieEntry.COLUMN_TITLE, "The Recruit");
-        testValues.put(MovieContract.MovieEntry.COLUMN_YEAR, 2003);
-        testValues.put(MovieContract.MovieEntry.COLUMN_LENGTH, 115);
-        testValues.put(MovieContract.MovieEntry.COLUMN_RATING, 6.6);
-        testValues.put(MovieContract.MovieEntry.COLUMN_GENRE, "Action, Adventure");
-        testValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION,  "A brilliant young CIA trainee is asked by his mentor to help find a mole in the Agency.");
+        testValues.put(MovieContract.MovieEntry.COLUMN_TITLE, "Killing Season");
+        testValues.put(MovieContract.MovieEntry.COLUMN_YEAR, 2013);
+        testValues.put(MovieContract.MovieEntry.COLUMN_LENGTH, 91);
+        testValues.put(MovieContract.MovieEntry.COLUMN_RATING, 5.4);
+        testValues.put(MovieContract.MovieEntry.COLUMN_GENRE, "Action, Drama");
+        testValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION,  "Two veterans of the Bosnian War - one American, one Serbian - find their unlikely friendship tested when one of them reveals their true intentions.");
         testValues.put(MovieContract.MovieEntry.COLUMN_THUMB, "https://images-na.ssl-images-amazon.com/images/M/MV5BMjE5MDMzOTk3MV5BMl5BanBnXkFtZTYwNTE0NTg2._V1_UX182_CR0,0,182,268_AL_.jpg");
 
 
@@ -139,32 +150,46 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
         db.close();
     }
 
+    public static int getNumberDBRows(){
+        db = dbHelper.getReadableDatabase();
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, MovieContract.MovieEntry.TABLE_NAME);
+        Log.i("COUNTDB", Integer.toString(numRows));
+        return numRows;
+    }
 
-    public void returnValuesTestDB(String s){
-        MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String column = MovieContract.MovieEntry.COLUMN_TITLE;
-        String selection = column+" like "+s;
+    public static String[] getFavoriteMovies(){
+
+        db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.query(
                 MovieContract.MovieEntry.TABLE_NAME, //Table to Query
                 null, // all columns
-                selection, // Columns for the "where" clause
+                null, // Columns for the "where" clause //selection
                 null, // Values for the "where" clause
                 null, // columns to group by
                 null, // columns to filter by row groups
                 null // sort order
         );
 
+        String[] resultStrs = new String[getNumberDBRows()];
+
         if (cursor.moveToFirst()) {
             do {
+                Log.i(LOG_TAG, "Retrieving entry position : " + cursor.getColumnIndex(MovieContract.MovieEntry._ID));
                 int columnTitle = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
-                Log.i(LOG_TAG, "Retrieving entry: " + cursor.getString(columnTitle));
+                String title = cursor.getString(columnTitle);
+                Log.i(LOG_TAG, "Retrieving entry title: " + title);
                 int columnYear = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_YEAR);
-                Log.i(LOG_TAG, "Retrieving entry: " + cursor.getString(columnYear));
-                int columnDesc = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_DESCRIPTION);
-                Log.i(LOG_TAG, "Retrieving entry: " + cursor.getString(columnDesc));
+                String year = cursor.getString(columnYear);
+                Log.i(LOG_TAG, "Retrieving entry year: " + year);
+                int columnRat = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING);
+                String rating = cursor.getString(columnRat);
+                Log.i(LOG_TAG, "Retrieving entry rating: " + rating);
+                int columnThumb = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_THUMB);
+                String thumb = cursor.getString(columnThumb);
+                Log.i(LOG_TAG, "Retrieving entry thumb: " + thumb);
+                resultStrs[cursor.getPosition()] =  title + "_" + year + "_" + rating + "_" + thumb;
             } while (cursor.moveToNext());
         } else {
             Log.i(LOG_TAG, "No results from Location table!");
@@ -172,30 +197,18 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
 
         cursor.close();
         db.close();
-    }
-
-    public static String[] getFavoriteMovies(){
-        String[] resultStrs = new String[2];
-
-        String movietitle = "The Recruit";
-        String movieRating = "6.6";
-        resultStrs[0] = movietitle + ":" + movieRating;
-
-        resultStrs[1] = movietitle+"2" + ":" + movieRating+"2";
 
         return resultStrs;
     }
 
-    private String [] getTheWeatherForecast() {
+    private String [] getFavoriteMoviesFromDB() {
         /* Disable Strict Mode - Temporary Solution */
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        // Parser
-        //MoviesParser parser = new MoviesParser();
-        String[] days = getFavoriteMovies();
+        String[] movies = getFavoriteMovies();
 
-        return days;
+        return movies;
     }
 
     @Override
@@ -203,8 +216,8 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
 
     }
 
-    public interface OnDaySelectedListener {
-        public void onDaySelected(String s);
+    public interface OnMovieSelectedListener {
+        public void onMovieSelected(String s);
     }
 
     public class MyAdapter extends ArrayAdapter<String> {
@@ -231,33 +244,27 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
             TextView myTitle = (TextView) rowView.findViewById(R.id.text1);
             TextView myDescription = (TextView) rowView.findViewById(R.id.text2);
 
-            String description[] = values.get(position).split(":");
+            String description[] = values.get(position).split("_");
 
-            switch (description[0]){
-                case SANTIAGO:
-                    imageView.setImageResource(R.drawable.deadpool2);
-                    break;
-                case CRASTO:
-                    imageView.setImageResource(R.drawable.deadpool2);
-                    break;
-                case SNACK_BAR:
-                    imageView.setImageResource(R.drawable.deadpool2);
-                    break;
-                default:
-                    imageView.setImageResource(R.drawable.deadpool2);
-                    //imageView.
+            myTitle.setText(description[0] + " ("+description[1]+")");
+            myDescription.setText(description[2]);
+
+            Log.i("DESCRIPTION3", description[3]);
+
+            try {
+                Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(description[3]).getContent());
+                imageView.setImageBitmap(bitmap);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            myTitle.setText(description[0]);
-            myDescription.setText(description[1]);
-
-            // TODO - Quando estiver encerrado, fazer aparecer um TOAST a dizer encerrado
-
-        /*
-        textView.setText(values.get(position));
-        // Change the icon for Windows and iPhone
-        String s = EmentasUAParser.getMeal(position);
-        */
+            /*
+            textView.setText(values.get(position));
+            // Change the icon for Windows and iPhone
+            String s = EmentasUAParser.getMeal(position);
+            */
 
             return rowView;
         }
