@@ -20,8 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageView favsImage;
     private ImageView suggestionsImage;
 
-    private static final String LOG_TAG = "LOG_TAG";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,88 +51,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intentFavs);
             }});
 
-        // Just for test
-        //addTestDB();
-        returnValuesTestDB("\"The Recruit\"");
     }
 
-    public void returnValuesTestDB(String s){
-        MovieDbHelper dbHelper = new MovieDbHelper(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String column = MovieContract.MovieEntry.COLUMN_TITLE;
-        String selection = column+" like "+s;
-
-        Cursor cursor = db.query(
-                MovieContract.MovieEntry.TABLE_NAME, //Table to Query
-                null, // all columns
-                selection, // Columns for the "where" clause
-                null, // Values for the "where" clause
-                null, // columns to group by
-                null, // columns to filter by row groups
-                null // sort order
-        );
-
-        if (cursor.moveToFirst()) {
-            do {
-                int columnTitle = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
-                Log.i(LOG_TAG, "Retrieving entry: " + cursor.getString(columnTitle));
-                int columnYear = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_YEAR);
-                Log.i(LOG_TAG, "Retrieving entry: " + cursor.getString(columnYear));
-                int columnDesc = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_DESCRIPTION);
-                Log.i(LOG_TAG, "Retrieving entry: " + cursor.getString(columnDesc));
-            } while (cursor.moveToNext());
-        } else {
-            Log.i(LOG_TAG, "No results from Location table!");
-        }
-
-        cursor.close();
-        db.close();
-    }
-
-    public void addTestDB(){
-        MovieDbHelper dbHelper = new MovieDbHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        ContentValues testValues = new ContentValues();
-
-        testValues.put(MovieContract.MovieEntry.COLUMN_TITLE, "The Recruit");
-        testValues.put(MovieContract.MovieEntry.COLUMN_YEAR, 2003);
-        testValues.put(MovieContract.MovieEntry.COLUMN_LENGTH, 115);
-        testValues.put(MovieContract.MovieEntry.COLUMN_RATING, 6.6);
-        testValues.put(MovieContract.MovieEntry.COLUMN_GENRE, "Action, Adventure");
-        testValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION,  "A brilliant young CIA trainee is asked by his mentor to help find a mole in the Agency.");
-        testValues.put(MovieContract.MovieEntry.COLUMN_THUMB, "https://images-na.ssl-images-amazon.com/images/M/MV5BMjE5MDMzOTk3MV5BMl5BanBnXkFtZTYwNTE0NTg2._V1_UX182_CR0,0,182,268_AL_.jpg");
-
-
-        long locationRowId = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, testValues);
-        if (locationRowId == -1) {
-            Log.i(LOG_TAG, "Failed to insert row !");
-        }
-
-        Cursor cursor = db.query(
-                MovieContract.MovieEntry.TABLE_NAME, //Table to Query
-                null, // all columns
-                null, // Columns for the "where" clause
-                null, // Values for the "where" clause
-                null, // columns to group by
-                null, // columns to filter by row groups
-                null // sort order
-        );
-
-        if (cursor.moveToFirst()) {
-            do {
-                int columnIndex =
-                        cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
-                Log.i(LOG_TAG, "Retrieving entry: " + cursor.getString(columnIndex));
-            } while (cursor.moveToNext());
-        } else {
-            Log.i(LOG_TAG, "No results from Location table!");
-        }
-
-        cursor.close();
-        db.close();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

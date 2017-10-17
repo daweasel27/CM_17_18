@@ -62,6 +62,5 @@ public class FavoritesActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layout_container_movie_info_fragment, detailsFragment).commit();
     }
-
 }
 
