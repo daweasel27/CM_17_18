@@ -26,9 +26,8 @@
         <activity android:name=".WatchTrailer" />
         <activity android:name=".Camera" />
         <activity android:name=".YoutubePlayer" />
-        <activity android:name=".SuggestionActivity">
-
-        </activity>
+        <activity android:name=".SuggestionActivity"></activity>
+        <activity android:name=".FavoritesActivity"></activity>
     </application>
 
 </manifest>
