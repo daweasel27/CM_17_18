@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -112,6 +113,7 @@ public class MovieInfoFragment extends Fragment {
         String director = null;
         String stars=null;
         String genre=null;
+        String length=null;
         if (cursor.moveToFirst()) {
             Log.i(LOG_TAG, "Retrieving entry position : " + cursor.getColumnIndex(MovieContract.MovieEntry._ID));
             int columnTitle = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
@@ -129,6 +131,9 @@ public class MovieInfoFragment extends Fragment {
             int columnStars = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_STARS);
             stars = cursor.getString(columnStars);
             Log.i(LOG_TAG, "Retrieving entry stars: " + stars);
+            int columnLength = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_LENGTH);
+            length = cursor.getString(columnLength);
+            Log.i(LOG_TAG, "Retrieving entry length: " + length);
             int columnRat = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING);
             rating = cursor.getString(columnRat);
             Log.i(LOG_TAG, "Retrieving entry rating: " + rating);
@@ -155,6 +160,8 @@ public class MovieInfoFragment extends Fragment {
         }
 
         textViewTitle.setText(title + " ("+year+")");
+        textViewLength.setText(length + "min");
+        textViewRating.setText(rating +"/10.0");
         textViewGenre.setText(genre);
         textViewDirectorInput.setText(director);
         textViewStarsInput.setText(stars);
