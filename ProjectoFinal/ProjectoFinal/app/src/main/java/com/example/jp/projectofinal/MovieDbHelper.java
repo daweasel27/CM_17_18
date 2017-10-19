@@ -22,7 +22,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        final String SQL_CREATE_WEATHER_TABLE = "CREATE TABLE " + MovieContract.MovieEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_MOVIES_TABLE = "CREATE TABLE " + MovieContract.MovieEntry.TABLE_NAME + " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
                 // forecasting, it's reasonable to assume the user will want information
@@ -33,6 +33,10 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 // the ID of the location entry associated with this movie data
                 MovieContract.MovieEntry.COLUMN_TITLE + " TEXT UNIQUE NOT NULL, " +
 
+                MovieContract.MovieEntry.COLUMN_DIRECTOR + " TEXT NOT NULL, " +
+
+                MovieContract.MovieEntry.COLUMN_STARS + " TEXT NOT NULL, " +
+
                 MovieContract.MovieEntry.COLUMN_YEAR + " INTEGER NOT NULL, " +
 
                 MovieContract.MovieEntry.COLUMN_LENGTH + " INTEGER NOT NULL, " +
@@ -41,7 +45,11 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
                 MovieContract.MovieEntry.COLUMN_GENRE + " TEXT NOT NULL, " +
 
+                MovieContract.MovieEntry.COLUMN_STORY_LINE + " TEXT NOT NULL, " +
+
                 MovieContract.MovieEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
+
+                MovieContract.MovieEntry.COLUMN_POSTER + " TEXT NOT NULL, " +
 
                 MovieContract.MovieEntry.COLUMN_THUMB + " TEXT NOT NULL);";
 
@@ -49,7 +57,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         // per location, it's created a UNIQUE constraint with REPLACE strategy
         //" UNIQUE (" + MovieContract.MovieEntry.COLUMN_TITLE + ") ON CONFLICT REPLACE);";
 
-        sqLiteDatabase.execSQL(SQL_CREATE_WEATHER_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_MOVIES_TABLE);
     }
 
 

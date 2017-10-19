@@ -52,7 +52,7 @@ public class FavoritesActivity extends AppCompatActivity
     @Override
     public void onMovieSelected(String s) {
         Log.d("onMovieSelected", "onMovieSelected");
-        setContentView(R.layout.fragment_movie_info);
+        setContentView(R.layout.fragment_movie_details);
         MovieInfoFragment detailsFragment = new MovieInfoFragment();
         Bundle args = new Bundle();
         args.putString(TAG, s);
@@ -62,7 +62,7 @@ public class FavoritesActivity extends AppCompatActivity
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.layout_container_movie_info_fragment, detailsFragment).commit();
+                .replace(R.id.layout_container_movie_details_fragment, detailsFragment).commit();
     }
 }
 

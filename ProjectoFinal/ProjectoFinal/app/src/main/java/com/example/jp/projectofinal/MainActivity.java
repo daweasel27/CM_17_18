@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Movie;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView one = null;
     private ImageView favsImage;
     private ImageView suggestionsImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
