@@ -4,8 +4,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.youtube.player.YouTubePlayer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
+import com.example.jp.projectofinal.DataModels.MoviesSuggestionInfo;
 /**
  * Created by TiagoHenriques on 12/10/2017.
  */
@@ -13,14 +18,24 @@ import java.util.Random;
 // The types specified here are the input data type, the progress type, and the result type
 public class LoadYTVideoAsyncTask extends AsyncTask<YouTubePlayer, Void, Void> {
 
-    final String[] trailers = {"hAUTdjf9rko", "DblEwHkde8U", "ue80QwXMRHg"};
-
     @Override
     protected Void doInBackground(YouTubePlayer... params) {
         YouTubePlayer player = params[0];
-        player.loadVideo(trailers[new Random().nextInt(trailers.length)]);
+        HashMap<String, String> trailersToWatch = MainActivity.mv.getTrailers();
+
+        Random random = new Random();
+        List<String> keys = new ArrayList<>(trailersToWatch.keySet());
+        String randomKey = keys.get( random.nextInt(keys.size()));
+        String value = trailersToWatch.get(randomKey);
+
+        player.loadVideo(value);
+
+        MainActivity.mv.addWatchedTrailers(randomKey, value);
+
         return null;
     }
+
+
 
     @Override
     protected void onPostExecute(Void aVoid) {

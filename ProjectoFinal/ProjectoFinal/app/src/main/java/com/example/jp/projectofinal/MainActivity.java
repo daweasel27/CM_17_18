@@ -16,16 +16,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.jp.projectofinal.DataModels.MoviesSuggestionInfo;
+
 public class MainActivity extends AppCompatActivity {
     private ImageView one = null;
     private ImageView favsImage;
     private ImageView suggestionsImage;
 
+    public static MoviesSuggestionInfo mv;
+    public static SaveToFile sv;
+    public static MovieSuggestion ms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
+
+        mv = new MoviesSuggestionInfo();
+        mv.initializeMovies();
+        sv = new SaveToFile();
+        ms = new MovieSuggestion(getBaseContext());
 
         one = (ImageView)findViewById(R.id.imageViewStart);
         suggestionsImage = (ImageView) findViewById(R.id.imageViewSuggestions);

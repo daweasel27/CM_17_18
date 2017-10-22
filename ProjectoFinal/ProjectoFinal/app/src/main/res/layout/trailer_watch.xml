@@ -16,14 +16,16 @@
         <fragment
             android:name="com.google.android.youtube.player.YouTubePlayerFragment"
             android:id="@+id/youtube"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_below="@+id/sdk_start_button"
             android:layout_alignParentEnd="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="1.0"/>
 
         <Button
             android:id="@+id/sdk_start_button"
@@ -32,9 +34,11 @@
             android:layout_alignBaseline="@+id/anger_textview"
             android:layout_alignBottom="@+id/anger_textview"
             android:layout_alignParentEnd="true"
-            tools:layout_editor_absoluteY="81dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            app:layout_constraintLeft_toRightOf="@+id/front_back_toggle_button"
+            android:layout_marginLeft="-7dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="162dp" />
 
         <ToggleButton
             android:id="@+id/front_back_toggle_button"
@@ -45,9 +49,11 @@
             android:textOn="BACK"
             android:layout_above="@+id/anger_textview"
             android:layout_alignParentEnd="true"
-            tools:layout_editor_absoluteY="81dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            app:layout_constraintLeft_toRightOf="@+id/surfaceview_visibility_button"
+            android:layout_marginLeft="-63dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="192dp" />
 
         <Button
             android:id="@+id/surfaceview_visibility_button"
@@ -56,19 +62,37 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            tools:layout_editor_absoluteY="81dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="0dp" />
 
+        <Button
+            android:id="@+id/surfaceview_visibility_button1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/surfaceview_visibility_button"
+
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:visibility="invisible"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="0dp" />
         <TextView
             android:id="@+id/smile_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             tools:text="Smile"
-            tools:layout_editor_absoluteY="81dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            app:layout_constraintLeft_toRightOf="@+id/sdk_start_button"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="7dp" />
 
         <TextView
             android:id="@+id/joy_textview"
@@ -77,7 +101,7 @@
             android:layout_below="@id/smile_textview"
             android:layout_margin="16dp"
             tools:text="Joy"
-            tools:layout_editor_absoluteY="81dp"
+            tools:layout_editor_absoluteY="162dp"
             tools:layout_editor_absoluteX="0dp"
             android:visibility="invisible"/>
 
@@ -88,7 +112,7 @@
             android:layout_below="@id/joy_textview"
             android:layout_margin="16dp"
             tools:text="Anger"
-            tools:layout_editor_absoluteY="81dp"
+            tools:layout_editor_absoluteY="162dp"
             tools:layout_editor_absoluteX="0dp"
             android:visibility="invisible"/>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_container_movie_details_fragment"
     android:layout_width="match_parent"
@@ -40,18 +41,6 @@
                 android:layout_marginStart="8dp" />
 
             <TextView
-                android:id="@+id/textViewGenre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:textSize="12dp"
-                android:textColor="@android:color/widget_edittext_dark"
-                tools:text="Comedy/Action"
-                app:layout_constraintLeft_toLeftOf="@+id/textViewTitle"
-                android:layout_marginTop="4dp"
-                app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
-
-            <TextView
                 android:id="@+id/textViewLength"
                 android:textColor="@android:color/widget_edittext_dark"
                 android:layout_width="wrap_content"
@@ -59,23 +48,8 @@
                 android:textSize="12dp"
                 android:inputType="textPersonName"
                 tools:text="120 min"
-                app:layout_constraintTop_toTopOf="@+id/textViewGenre"
-                app:layout_constraintRight_toRightOf="@+id/textViewDescription"
-                android:layout_marginTop="0dp"
-                android:layout_marginRight="8dp" />
-
-            <TextView
-                android:id="@+id/textViewDescription"
-                android:layout_width="219dp"
-                android:layout_height="52dp"
-                tools:text="A brilliant young CIA trainee is asked by his mentor to help find a mole in the Agency."
-                app:layout_constraintLeft_toLeftOf="@+id/imageViewStar"
-                android:layout_marginLeft="1dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageViewMovie"
-                android:layout_marginTop="50dp"
-                app:layout_constraintTop_toBottomOf="@+id/textViewStars"
-                app:layout_constraintVertical_bias="0.523"
-                android:layout_marginStart="1dp" />
+                tools:layout_editor_absoluteX="304dp"
+                tools:layout_editor_absoluteY="48dp" />
 
             <ImageView
                 android:id="@+id/imageViewStar"
@@ -109,53 +83,6 @@
                 android:paddingRight="16dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp" />
-
-            <TextView
-                android:id="@+id/textViewDirector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Director:"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@android:color/black"
-                android:textSize="17dp"
-                app:layout_constraintLeft_toLeftOf="@+id/imageViewStar"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/imageViewStar" />
-
-            <TextView
-                android:id="@+id/textViewDirectorInput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Cristiano Ronaldo"
-                app:layout_constraintTop_toTopOf="@+id/textViewDirector"
-                app:layout_constraintLeft_toRightOf="@+id/textViewDirector"
-                android:layout_marginLeft="6dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginStart="6dp" />
-
-            <TextView
-                android:id="@+id/textViewStars"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Stars:"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@android:color/black"
-                android:textSize="17dp"
-                app:layout_constraintLeft_toLeftOf="@+id/textViewDirector"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@+id/textViewDirector" />
-
-            <TextView
-                android:id="@+id/textViewStarsInput"
-                android:layout_width="167dp"
-                android:layout_height="42dp"
-                tools:text="Messi Lionel, Cristiano Ronaldo, Paulo Dybala"
-                android:layout_marginTop="3dp"
-                app:layout_constraintTop_toTopOf="@+id/textViewStars"
-                app:layout_constraintLeft_toRightOf="@+id/textViewStars"
-                android:layout_marginLeft="6dp"
-                android:layout_marginStart="6dp"
-                tools:layout_editor_absoluteX="302dp" />
 
         </android.support.constraint.ConstraintLayout>
 

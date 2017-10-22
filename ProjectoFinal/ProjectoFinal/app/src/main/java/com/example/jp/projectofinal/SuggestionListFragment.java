@@ -1,9 +1,15 @@
 package com.example.jp.projectofinal;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +21,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jp.projectofinal.DataModels.MovieInfo;
+
 import org.json.JSONException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -28,37 +40,31 @@ import java.util.ArrayList;
  */
 public class SuggestionListFragment extends Fragment implements View.OnClickListener {
 
+    private OnMovieSelectedListener mListener;
     private ListView listView;
     private MyAdapter myAdapter;
-    private OnDaySelectedListener mListener;
+    ArrayList<MovieInfo> list;
 
-    public SuggestionListFragment() {
-        // Required empty public constructor
+    public SuggestionListFragment(ArrayList<MovieInfo> list) {
+        this.list = list;
     }
-
+    public SuggestionListFragment() {
+        this.list = list;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_suggestion_list, container, false);
 
-        //Resources res = getResources();
-
-        //titles = res.getStringArray(R.array.cenas);
-
-        //MyAdapter myAdapter = new MyAdapter();
         myAdapter = new MyAdapter(
-                getActivity(), // The current context (this activity)
+                getActivity(),
                 new ArrayList<String>());
 
-        final String[] daysLabels = getTheWeatherForecast();
-
-        // IMP...
         myAdapter.clear();
-        for (String dayEntry : daysLabels) {
-            Log.d("DAY_ENTRY", dayEntry);
-            myAdapter.add(dayEntry);
+        for (MovieInfo movie : list ) {
+            Log.d("DAY_ENTRY", movie.getId());
+            myAdapter.add(movie.getTitle()+":"+movie.getVote_average()+":"+movie.getRelease_date()+ ":" +movie.getBackdrop_path());
         }
 
         listView = (ListView) view.findViewById(R.id.list_view);
@@ -70,41 +76,20 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
                 Context context = view.getContext();
                 Toast toast = Toast.makeText(context, s, Toast.LENGTH_SHORT);
                 toast.show();
-                mListener.onDaySelected(s);
+                mListener.onMovieSelected(s);
+                Intent in = new Intent(getActivity(),
+                        MovieInfoActivity.class);
+                in.putExtra("info", s);
+                startActivity(in);
             }
         });
 
         return view;
     }
 
-    // Container Activity must implement this interface
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnDaySelectedListener) {
-            mListener = (OnDaySelectedListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnDaySelectedListener");
-        }
-    }
 
-    private String [] getTheWeatherForecast() {
-        /* Disable Strict Mode - Temporary Solution */
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        // Do not forget to add INTERNET permissions
-
-        // Parser
-        MoviesParser parser = new MoviesParser();
-        String[] days = new String[0];
-        try {
-            days =   parser.getMealDataFromJson( parser.getMealsInfo());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return days;
+    public interface OnMovieSelectedListener {
+        public void onMovieSelected(String s);
     }
 
     @Override
@@ -112,15 +97,7 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
 
     }
 
-    public interface OnDaySelectedListener {
-        public void onDaySelected(String s);
-    }
-
     public class MyAdapter extends ArrayAdapter<String> {
-
-        private final String SANTIAGO = "Refeitório de Santiago";
-        private final String CRASTO = "Refeitório do Crasto";
-        private final String SNACK_BAR = "Snack-Bar/Self";
         private Context context;
         private ArrayList<String> values;
 
@@ -141,35 +118,52 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
             TextView myDescription = (TextView) rowView.findViewById(R.id.text2);
 
             String description[] = values.get(position).split(":");
+            Log.e("irl", "http://image.tmdb.org/t/p/w185//"+ description[3]);
 
-            switch (description[0]){
-                case SANTIAGO:
-                    imageView.setImageResource(R.drawable.deadpool2);
-                    break;
-                case CRASTO:
-                    imageView.setImageResource(R.drawable.deadpool2);
-                    break;
-                case SNACK_BAR:
-                    imageView.setImageResource(R.drawable.deadpool2);
-                    break;
-                default:
-                    imageView.setImageResource(R.drawable.deadpool2);
-            }
+            new ImageLoadTask("http://image.tmdb.org/t/p/w185"+ description[3], imageView).execute();
 
-            myTitle.setText(description[0] + " - " + description[2]);
+            myTitle.setText(description[0] + " - " + description[2].split("-")[0]);
             myDescription.setText(description[1]);
 
-            // TODO - Quando estiver encerrado, fazer aparecer um TOAST a dizer encerrado
-
-        /*
-        textView.setText(values.get(position));
-        // Change the icon for Windows and iPhone
-        String s = EmentasUAParser.getMeal(position);
-        */
 
             return rowView;
         }
     }
 
+
+}
+
+class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+    private String url;
+    private ImageView imageView;
+
+    public ImageLoadTask(String url, ImageView imageView) {
+        this.url = url;
+        this.imageView = imageView;
+    }
+
+    @Override
+    protected Bitmap doInBackground(Void... params) {
+        try {
+            URL urlConnection = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlConnection
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Bitmap result) {
+        super.onPostExecute(result);
+        imageView.setImageBitmap(result);
+    }
 
 }

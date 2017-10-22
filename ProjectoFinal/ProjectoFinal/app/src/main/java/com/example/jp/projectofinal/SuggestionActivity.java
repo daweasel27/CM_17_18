@@ -1,23 +1,38 @@
 package com.example.jp.projectofinal;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.example.jp.projectofinal.DataModels.MovieInfo;
+
+import java.util.ArrayList;
 
 
 /**
  * Created by TiagoHenriques on 13/10/2017.
  */
 public class SuggestionActivity extends AppCompatActivity
-        implements SuggestionListFragment.OnDaySelectedListener{
-
+         {
+    ArrayList<MovieInfo> list;
     //private TextView textViewTest;
+
+
+    public ArrayList<MovieInfo> getList() {
+        return list;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_suggestion_list);
 
+        Intent intent = getIntent();
+        list = (ArrayList<MovieInfo>) intent.getSerializableExtra("arg_key");
+        for(MovieInfo movie : list){
+            Log.d("lista", movie.getTitle());
+        }
         getFragment(savedInstanceState);
 
         //textViewTest = (TextView) findViewById(R.id.textViewTest);
@@ -38,7 +53,7 @@ public class SuggestionActivity extends AppCompatActivity
             }
 
             // Create a new Fragment to be placed in the activity layout
-            SuggestionListFragment dailyListFragment = new SuggestionListFragment();
+            SuggestionListFragment dailyListFragment = new SuggestionListFragment(list);
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
@@ -46,22 +61,6 @@ public class SuggestionActivity extends AppCompatActivity
         }
     }
 
-
-    @Override
-    public void onDaySelected(String s) {
-        Log.d("ON_DAY_SELECTED", "AIAI");
-        setContentView(R.layout.fragment_movie_info);
-        MovieInfoFragment detailsFragment = new MovieInfoFragment();
-        Bundle args = new Bundle();
-        //args.putString(TAG, s);
-        // In case this activity was started with special instructions from an
-        // Intent, pass the Intent's extras to the fragment as arguments
-        //detailsFragment.setArguments(args);
-
-        // Add the fragment to the 'fragment_container' FrameLayout
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.layout_container_movie_info_fragment, detailsFragment).commit();
-    }
 
 }
 
