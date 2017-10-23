@@ -1,15 +1,9 @@
-package com.example.jp.projectofinal;
+package com.example.jp.projectofinal.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +15,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jp.projectofinal.DataModels.MovieInfo;
+import com.example.jp.projectofinal.activities.MovieInfoActivity;
+import com.example.jp.projectofinal.R;
+import com.example.jp.projectofinal.asyncTasks.ImageLoadTaskSuggestions;
+import com.example.jp.projectofinal.dataModels.MovieInfo;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -120,7 +111,7 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
             String description[] = values.get(position).split(":");
             Log.e("irl", "http://image.tmdb.org/t/p/w185//"+ description[3]);
 
-            new ImageLoadTask("http://image.tmdb.org/t/p/w185"+ description[3], imageView).execute();
+            new ImageLoadTaskSuggestions("http://image.tmdb.org/t/p/w185"+ description[3], imageView).execute();
 
             myTitle.setText(description[0] + " - " + description[2].split("-")[0]);
             myDescription.setText(description[1]);
@@ -129,41 +120,4 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
             return rowView;
         }
     }
-
-
-}
-
-class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
-
-    private String url;
-    private ImageView imageView;
-
-    public ImageLoadTask(String url, ImageView imageView) {
-        this.url = url;
-        this.imageView = imageView;
-    }
-
-    @Override
-    protected Bitmap doInBackground(Void... params) {
-        try {
-            URL urlConnection = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) urlConnection
-                    .openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(Bitmap result) {
-        super.onPostExecute(result);
-        imageView.setImageBitmap(result);
-    }
-
 }

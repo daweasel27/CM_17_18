@@ -1,4 +1,4 @@
-package com.example.jp.projectofinal;
+package com.example.jp.projectofinal.fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Movie;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
@@ -21,6 +21,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.jp.projectofinal.R;
+import com.example.jp.projectofinal.asyncTasks.ImageLoadTaskFavorites;
+import com.example.jp.projectofinal.db.MovieContract;
+import com.example.jp.projectofinal.db.MovieDbHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -288,9 +293,6 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
 
     public class MyAdapter extends ArrayAdapter<String> {
 
-        private final String SANTIAGO = "Refeitório de Santiago";
-        private final String CRASTO = "Refeitório do Crasto";
-        private final String SNACK_BAR = "Snack-Bar/Self";
         private Context context;
         private ArrayList<String> values;
 
@@ -317,6 +319,7 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
 
             Log.i("DESCRIPTION3", description[3]);
 
+            /*
             try {
                 Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(description[3]).getContent());
                 imageView.setImageBitmap(bitmap);
@@ -325,14 +328,11 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            /*
-            textView.setText(values.get(position));
-            // Change the icon for Windows and iPhone
-            String s = EmentasUAParser.getMeal(position);
             */
+            new ImageLoadTaskFavorites(description[3], imageView).execute();
 
             return rowView;
         }
     }
 }
+

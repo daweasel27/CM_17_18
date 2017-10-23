@@ -1,19 +1,17 @@
-package com.example.jp.projectofinal;
+package com.example.jp.projectofinal.fragments;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.jp.projectofinal.DataModels.MovieInfo;
+import com.example.jp.projectofinal.R;
+import com.example.jp.projectofinal.dataModels.MovieInfo;
 
 import java.io.IOException;
 import java.io.InputStream;

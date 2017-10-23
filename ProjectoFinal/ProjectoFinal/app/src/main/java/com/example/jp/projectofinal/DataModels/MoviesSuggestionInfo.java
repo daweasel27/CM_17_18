@@ -1,4 +1,4 @@
-package com.example.jp.projectofinal.DataModels;
+package com.example.jp.projectofinal.dataModels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class MoviesSuggestionInfo {
     }
 
     public String getLastWatchedTrailer(){
-        Iterator<Map.Entry<String,String>> iterator = watchedTrailers.entrySet().iterator();
+        Iterator<Map.Entry<String, String>> iterator = watchedTrailers.entrySet().iterator();
         Map.Entry<String, String> result = null;
         while (iterator.hasNext()) {
             result = iterator.next();

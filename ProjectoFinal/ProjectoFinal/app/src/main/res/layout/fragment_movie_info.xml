@@ -4,7 +4,7 @@
     android:id="@+id/layout_container_movie_info_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jp.projectofinal.MovieInfoFragment" >
+    tools:context="com.example.jp.projectofinal.fragments.MovieInfoFragment" >
 
     <TextView
         android:id="@+id/textViewCantina"

@@ -1,4 +1,4 @@
-package com.example.jp.projectofinal;
+package com.example.jp.projectofinal.db;
 
 import android.provider.BaseColumns;
 import android.text.format.Time;

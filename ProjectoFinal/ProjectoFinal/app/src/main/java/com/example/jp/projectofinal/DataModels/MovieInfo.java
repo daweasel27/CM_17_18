@@ -1,4 +1,4 @@
-package com.example.jp.projectofinal.DataModels;
+package com.example.jp.projectofinal.dataModels;
 
 import android.os.Parcel;
 import android.os.Parcelable;

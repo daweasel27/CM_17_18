@@ -1,10 +1,9 @@
-package com.example.jp.projectofinal;
+package com.example.jp.projectofinal.fragments;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,10 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.example.jp.projectofinal.R;
+import com.example.jp.projectofinal.db.MovieContract;
+import com.example.jp.projectofinal.db.MovieDbHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,7 +63,7 @@ public class MovieInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_suggestion_details, container, false);
 
         dbHelper = new MovieDbHelper(getActivity());
 

@@ -1,4 +1,4 @@
-package com.example.jp.projectofinal;
+package com.example.jp.projectofinal.parser;
 
 import android.text.format.Time;
 import android.util.Log;

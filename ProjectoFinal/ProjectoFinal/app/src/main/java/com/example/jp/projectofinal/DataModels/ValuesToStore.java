@@ -1,4 +1,4 @@
-package com.example.jp.projectofinal.DataModels;
+package com.example.jp.projectofinal.dataModels;
 
 /**
  * Created by JP on 10/17/2017.

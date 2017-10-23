@@ -1,8 +1,9 @@
-package com.example.jp.projectofinal;
+package com.example.jp.projectofinal.asyncTasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.jp.projectofinal.activities.MainActivity;
 import com.google.android.youtube.player.YouTubePlayer;
 
 import java.util.ArrayList;
@@ -10,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import com.example.jp.projectofinal.DataModels.MoviesSuggestionInfo;
 /**
  * Created by TiagoHenriques on 12/10/2017.
  */

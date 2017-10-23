@@ -1,21 +1,13 @@
 package com.example.jp.projectofinal;
 
-import android.app.Activity;
-import android.app.DownloadManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.JsonReader;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.amazonaws.Response;
-import com.amazonaws.http.HttpClient;
-import com.amazonaws.http.HttpResponse;
-import com.example.jp.projectofinal.DataModels.MovieInfo;
-import com.example.jp.projectofinal.DataModels.ValuesToStore;
+import com.example.jp.projectofinal.activities.SuggestionActivity;
+import com.example.jp.projectofinal.dataModels.MovieInfo;
+import com.example.jp.projectofinal.dataModels.ValuesToStore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,8 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -35,8 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by JP on 10/17/2017.

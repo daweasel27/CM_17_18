@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup,android:label">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,10 +24,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".WatchTrailer" />
-        <activity android:name=".Camera" />
+        <activity android:name=".activities.Camera" />
         <activity android:name=".YoutubePlayer" />
-        <activity android:name=".SuggestionActivity"></activity>
-        <activity android:name=".FavoritesActivity"></activity>
+        <activity android:name=".activities.SuggestionActivity"></activity>
+        <activity android:name=".activities.FavoritesActivity"></activity>
 
     </application>
 

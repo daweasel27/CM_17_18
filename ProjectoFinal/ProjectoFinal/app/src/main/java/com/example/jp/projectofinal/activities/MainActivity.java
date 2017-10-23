@@ -1,22 +1,18 @@
-package com.example.jp.projectofinal;
+package com.example.jp.projectofinal.activities;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Movie;
-import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.jp.projectofinal.DataModels.MoviesSuggestionInfo;
+import com.example.jp.projectofinal.MovieSuggestion;
+import com.example.jp.projectofinal.R;
+import com.example.jp.projectofinal.SaveToFile;
+import com.example.jp.projectofinal.dataModels.MoviesSuggestionInfo;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView one = null;

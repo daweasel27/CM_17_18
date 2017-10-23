@@ -3,7 +3,8 @@ package com.example.jp.projectofinal;
 import android.os.Environment;
 import android.util.Log;
 
-import com.example.jp.projectofinal.DataModels.ValuesToStore;
+import com.example.jp.projectofinal.activities.MainActivity;
+import com.example.jp.projectofinal.dataModels.ValuesToStore;
 
 import java.io.BufferedWriter;
 import java.io.File;
