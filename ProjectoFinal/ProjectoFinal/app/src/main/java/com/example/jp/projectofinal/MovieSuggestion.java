@@ -32,6 +32,7 @@ import java.util.Map;
 
 public class MovieSuggestion{
 
+    private final static String api_key = "5ea84afa0c7a5e8b2e3f94c9de502974";
     private Map<String, Integer> gender = new HashMap<>();
 
     private HashMap<String, List<ValuesToStore>> watched = new HashMap<>();
@@ -199,7 +200,7 @@ class GetDataSync extends AsyncTask<String, Void, String> {
 
 
     private void getData(String gender) throws IOException, JSONException {
-        JSONObject json = readJsonFromUrl("https://api.themoviedb.org/3/discover/movie?with_genres=" + gender + "&page=1&include_video=false&include_adult=false&sort_by=popularity.desc&language=en-US&api_key=7d1ca5ce15cfc2d3a71c265d6358e0d3");
+        JSONObject json = readJsonFromUrl("https://api.themoviedb.org/3/discover/movie?with_genres=" + gender + "&page=1&include_video=false&include_adult=false&sort_by=popularity.desc&language=en-US&api_key="+api_key);
         try {
             JSONObject json1;
             JSONArray arrJson = json.getJSONArray("results");
@@ -242,11 +243,6 @@ class GetDataSync extends AsyncTask<String, Void, String> {
             is.close();
 
         }
-
-
     }
-
-
-
 }
 }

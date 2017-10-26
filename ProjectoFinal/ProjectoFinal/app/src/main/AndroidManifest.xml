@@ -28,7 +28,6 @@
         <activity android:name=".YoutubePlayer" />
         <activity android:name=".activities.SuggestionActivity"></activity>
         <activity android:name=".activities.FavoritesActivity"></activity>
-
     </application>
 
 </manifest>

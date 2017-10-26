@@ -43,8 +43,6 @@ public class MovieInfoFragment extends Fragment {
     private TextView textViewGenre;
     private TextView textViewLength;
     private TextView textViewRating;
-    private TextView textViewDirectorInput;
-    private TextView textViewStarsInput;
     private TextView textViewDescription;
     private TextView textViewStoryLine;
 
@@ -76,8 +74,6 @@ public class MovieInfoFragment extends Fragment {
         textViewGenre = (TextView) view.findViewById(R.id.textViewGenre);
         textViewLength = (TextView) view.findViewById(R.id.textViewLength);
         textViewRating = (TextView) view.findViewById(R.id.textViewRating);
-        textViewDirectorInput = (TextView) view.findViewById(R.id.textViewDirectorInput);
-        textViewStarsInput = (TextView) view.findViewById(R.id.textViewStarsInput);
         textViewDescription = (TextView) view.findViewById(R.id.textViewDescription);
         textViewStoryLine = (TextView) view.findViewById(R.id.textViewStoryLine);
 
@@ -163,8 +159,7 @@ public class MovieInfoFragment extends Fragment {
         textViewLength.setText(length + "min");
         textViewRating.setText(rating +"/10.0");
         textViewGenre.setText(genre);
-        textViewDirectorInput.setText(director);
-        textViewStarsInput.setText(stars);
+        // TIREI CENAS - NAO ESQUECER
         textViewDescription.setText(description);
         textViewStoryLine.setText(storyLine);
 

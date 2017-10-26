@@ -22,7 +22,7 @@ public class FavoritesActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_suggestion_list);
+        setContentView(R.layout.fragment_favorites_list);
 
         getFragment(savedInstanceState);
 
@@ -34,7 +34,7 @@ public class FavoritesActivity extends AppCompatActivity
     private void getFragment(Bundle savedInstanceState){
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
-        if (findViewById(R.id.layout_suggestions_list_fragment) != null) {
+        if (findViewById(R.id.layout_favorites_list_fragment) != null) {
 
             // However, if we're being restored from a previous state,
             // then we don't need to do anything and should return or else
@@ -48,7 +48,7 @@ public class FavoritesActivity extends AppCompatActivity
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.layout_suggestions_list_fragment, dailyListFragment).commit();
+                    .add(R.id.layout_favorites_list_fragment, dailyListFragment).commit();
         }
     }
 

@@ -3,6 +3,7 @@ package com.example.jp.projectofinal.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,17 @@ import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.asyncTasks.ImageLoadTaskSuggestions;
 import com.example.jp.projectofinal.dataModels.MovieInfo;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 /**
@@ -55,7 +67,7 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
         myAdapter.clear();
         for (MovieInfo movie : list ) {
             Log.d("DAY_ENTRY", movie.getId());
-            myAdapter.add(movie.getTitle()+":"+movie.getVote_average()+":"+movie.getRelease_date()+ ":" +movie.getBackdrop_path());
+            myAdapter.add(movie.getId()+":"+movie.getTitle()+":"+movie.getVote_average()+":"+movie.getRelease_date()+ ":" +movie.getBackdrop_path());
         }
 
         listView = (ListView) view.findViewById(R.id.list_view);
@@ -63,24 +75,30 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s = myAdapter.getItem(position);
-                Context context = view.getContext();
-                Toast toast = Toast.makeText(context, s, Toast.LENGTH_SHORT);
-                toast.show();
-                mListener.onMovieSelected(s);
-                Intent in = new Intent(getActivity(),
-                        MovieInfoActivity.class);
-                in.putExtra("info", s);
-                startActivity(in);
+                int movieId = myAdapter.getId(position);
+                mListener.onMovieSelected(movieId);
             }
         });
+
+        //getMovie(String.valueOf(1647));
 
         return view;
     }
 
+    // Container Activity must implement this interface
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnMovieSelectedListener) {
+            mListener = (OnMovieSelectedListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnDaySelectedListener");
+        }
+    }
 
     public interface OnMovieSelectedListener {
-        public void onMovieSelected(String s);
+        public void onMovieSelected(Integer s);
     }
 
     @Override
@@ -98,6 +116,11 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
             this.values = values;
         }
 
+        public int getId(int position){
+            String description[] = values.get(position).split(":");
+            return Integer.parseInt(description[0]);
+        }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) context
@@ -107,15 +130,17 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             TextView myTitle = (TextView) rowView.findViewById(R.id.text1);
             TextView myDescription = (TextView) rowView.findViewById(R.id.text2);
+            //ImageView heart = (ImageView) rowView.findViewById(R.id.imageViewHeart);
 
             String description[] = values.get(position).split(":");
-            Log.e("irl", "http://image.tmdb.org/t/p/w185//"+ description[3]);
+            Log.e("irl", "http://image.tmdb.org/t/p/w185//"+ description[4]);
 
-            new ImageLoadTaskSuggestions("http://image.tmdb.org/t/p/w185"+ description[3], imageView).execute();
+            new ImageLoadTaskSuggestions("http://image.tmdb.org/t/p/w185"+ description[4], imageView).execute();
 
-            myTitle.setText(description[0] + " - " + description[2].split("-")[0]);
-            myDescription.setText(description[1]);
-
+            myTitle.setText(description[1] + " - " + description[3].split("-")[0]);
+            myDescription.setText(description[2]);
+            // to test
+            //heart.setImageResource(R.drawable.heartfull);
 
             return rowView;
         }
