@@ -39,10 +39,6 @@ public class SuggestionActivity extends AppCompatActivity
             Log.d("lista", movie.getTitle());
         }
         getFragment(savedInstanceState);
-
-        //textViewTest = (TextView) findViewById(R.id.textViewTest);
-        //final String[] daysLabels = getTheWeatherForecast();
-        //textViewTest.setText(daysLabels[0]);
     }
 
     private void getFragment(Bundle savedInstanceState){
@@ -66,7 +62,8 @@ public class SuggestionActivity extends AppCompatActivity
         }
     }
 
-     @Override
+
+    @Override
      public void onMovieSelected(Integer s) {
          Log.d("OM_SUGGESTION", "OM_SUGGESTION");
 

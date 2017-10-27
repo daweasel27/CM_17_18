@@ -17,7 +17,6 @@ import com.example.jp.projectofinal.dataModels.MoviesSuggestionInfo;
 public class MainActivity extends AppCompatActivity {
     private ImageView one = null;
     private ImageView favsImage;
-    private ImageView suggestionsImage;
 
     public static MoviesSuggestionInfo mv;
     public static SaveToFile sv;
@@ -34,33 +33,24 @@ public class MainActivity extends AppCompatActivity {
         ms = new MovieSuggestion(getBaseContext());
 
         one = (ImageView)findViewById(R.id.imageViewStart);
-        suggestionsImage = (ImageView) findViewById(R.id.imageViewSuggestions);
         favsImage = (ImageView) findViewById(R.id.imageViewFavorites);
 
 
         one.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Camera.class);
-                startActivity(intent);
-            }});
+            Intent intent = new Intent(MainActivity.this, Camera.class);
+            startActivity(intent);
+        }});
 
-        suggestionsImage.setOnClickListener(new View.OnClickListener(){
-
-            public void onClick(View view) {
-                Intent intentFavs = new Intent(MainActivity.this, SuggestionActivity.class);
-                startActivity(intentFavs);
-            }});
 
         favsImage.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View view) {
-                Intent intentFavs = new Intent(MainActivity.this, FavoritesActivity.class);
-                startActivity(intentFavs);
-            }});
-
+            Intent intentFavs = new Intent(MainActivity.this, FavoritesActivity.class);
+            startActivity(intentFavs);
+        }});
     }
-
 
 
     @Override

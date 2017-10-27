@@ -1,5 +1,6 @@
 package com.example.jp.projectofinal.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -10,10 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jp.projectofinal.R;
+import com.example.jp.projectofinal.activities.FavoritesActivity;
 import com.example.jp.projectofinal.db.MovieContract;
 import com.example.jp.projectofinal.db.MovieDbHelper;
 
@@ -43,8 +46,11 @@ public class MovieInfoFragment extends Fragment {
     private TextView textViewGenre;
     private TextView textViewLength;
     private TextView textViewRating;
+    private TextView textViewReleaseDate;
     private TextView textViewDescription;
     private TextView textViewStoryLine;
+    private ImageButton imageButtonHeart;
+    private ImageButton imageButtonBack;
 
 
     public MovieInfoFragment() {
@@ -71,16 +77,27 @@ public class MovieInfoFragment extends Fragment {
 
         imageViewMovie = (ImageView) view.findViewById(R.id.imageViewMovie);
         textViewTitle = (TextView) view.findViewById(R.id.textViewTitle);
+        textViewReleaseDate = (TextView) view.findViewById(R.id.textViewReleaseDateInput);
         textViewGenre = (TextView) view.findViewById(R.id.textViewGenre);
         textViewLength = (TextView) view.findViewById(R.id.textViewLength);
         textViewRating = (TextView) view.findViewById(R.id.textViewRating);
         textViewDescription = (TextView) view.findViewById(R.id.textViewDescription);
         textViewStoryLine = (TextView) view.findViewById(R.id.textViewStoryLine);
+        imageButtonHeart = (ImageButton) view.findViewById(R.id.imageViewHeartSuggestion);
+        imageButtonBack = (ImageButton) view.findViewById(R.id.imageButtonBack);
 
         populateFragment(movie_title);
 
+        imageButtonBack.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View view) {
+                Intent intentFavs = new Intent(getContext(), FavoritesActivity.class);
+                startActivity(intentFavs);
+        }});
+
         return view;
     }
+
 
     public void populateFragment(String movie_title){
 
@@ -106,8 +123,6 @@ public class MovieInfoFragment extends Fragment {
         String rating=null;
         String description= null;
         String storyLine=null;
-        String director = null;
-        String stars=null;
         String genre=null;
         String length=null;
         if (cursor.moveToFirst()) {
@@ -118,15 +133,11 @@ public class MovieInfoFragment extends Fragment {
             int columnYear = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_YEAR);
             year = cursor.getString(columnYear);
             Log.i(LOG_TAG, "Retrieving entry year: " + year);
-            int columnDirector = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_DIRECTOR);
-            director = cursor.getString(columnDirector);
-            Log.i(LOG_TAG, "Retrieving entry director: " + director);
+
             int columnGenre = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_GENRE);
             genre = cursor.getString(columnGenre);
             Log.i(LOG_TAG, "Retrieving entry genre: " + genre);
-            int columnStars = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_STARS);
-            stars = cursor.getString(columnStars);
-            Log.i(LOG_TAG, "Retrieving entry stars: " + stars);
+
             int columnLength = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_LENGTH);
             length = cursor.getString(columnLength);
             Log.i(LOG_TAG, "Retrieving entry length: " + length);
@@ -155,13 +166,14 @@ public class MovieInfoFragment extends Fragment {
             e.printStackTrace();
         }
 
-        textViewTitle.setText(title + " ("+year+")");
+        textViewTitle.setText(title);
         textViewLength.setText(length + "min");
         textViewRating.setText(rating +"/10.0");
+        textViewReleaseDate.setText(year);
         textViewGenre.setText(genre);
-        // TIREI CENAS - NAO ESQUECER
         textViewDescription.setText(description);
         textViewStoryLine.setText(storyLine);
+        imageButtonHeart.setImageResource(R.drawable.heartfull_small);
 
         cursor.close();
         db.close();

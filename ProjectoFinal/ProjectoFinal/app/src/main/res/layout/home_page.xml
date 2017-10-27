@@ -47,13 +47,10 @@
         android:layout_height="86dp"
         android:src="@drawable/hearicon"
         app:layout_constraintTop_toBottomOf="@+id/imageViewStart"
-        app:layout_constraintRight_toRightOf="@+id/imageViewStart" />
-
-    <ImageView
-        android:id="@+id/imageViewSuggestions"
-        android:layout_width="81dp"
-        android:layout_height="86dp"
-        android:src="@drawable/gear"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewStart"
+        app:layout_constraintRight_toRightOf="@+id/imageViewStart"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
         app:layout_constraintLeft_toLeftOf="@+id/imageViewStart" />
+
 </android.support.constraint.ConstraintLayout>
