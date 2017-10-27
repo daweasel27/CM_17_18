@@ -46,6 +46,7 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
     private ListView listView;
     private MyAdapter myAdapter;
     private OnMovieSelectedListener mListener;
+    private databaseEmpty mDatabaseListener;
     private static final String LOG_TAG = "LOG_TAG";
 
     private static MovieDbHelper dbHelper;
@@ -64,11 +65,6 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
 
         dbHelper = new MovieDbHelper(getActivity());
 
-        // Just for test
-        //addTestDB1();
-        //addTestDB2();
-        //returnValuesTestDB("\"The Recruit\"");
-
         myAdapter = new MyAdapter(
                 getActivity(), // The current context (this activity)
                 new ArrayList<String>());
@@ -78,8 +74,14 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
         // IMP...
         myAdapter.clear();
         for (String dayEntry : daysLabels) {
-            Log.d("DAY_ENTRY", dayEntry);
             myAdapter.add(dayEntry);
+        }
+
+        if(myAdapter.getSize() == 0){
+            Context context = view.getContext();
+            Toast toast = Toast.makeText(context, "You have no favorite movies ...", Toast.LENGTH_SHORT);
+            toast.show();
+            mDatabaseListener.onDatabaseFragment();
         }
 
         listView = (ListView) view.findViewById(R.id.list_view);
@@ -105,63 +107,14 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnMovieSelectedListener) {
+        if (context instanceof databaseEmpty && context instanceof OnMovieSelectedListener) {
+            mDatabaseListener = (databaseEmpty) context;
             mListener = (OnMovieSelectedListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnDaySelectedListener");
         }
     }
-
-    public void deleteDB(){
-        getContext().deleteDatabase("movies.db");
-    }
-
-    public void addTestDB1(){
-        Log.d("addTestDB", "addTestDB");
-        db = dbHelper.getWritableDatabase();
-
-        ContentValues testValues = new ContentValues();
-
-        testValues.put(MovieContract.MovieEntry.COLUMN_TITLE, "Killing Season");
-        testValues.put(MovieContract.MovieEntry.COLUMN_YEAR, 2013);
-        testValues.put(MovieContract.MovieEntry.COLUMN_LENGTH, 91);
-        testValues.put(MovieContract.MovieEntry.COLUMN_RATING, 5.4);
-        testValues.put(MovieContract.MovieEntry.COLUMN_GENRE, "Action, Drama");
-        testValues.put(MovieContract.MovieEntry.COLUMN_STORY_LINE, "Killing Season tells the story of two veterans of the Bosnian War, one American, one Serbian, who clash in the Appalachian Mountain wilderness. FORD is a former American soldier who fought on the front lines in Bosnia. When our story begins, he has retreated to a remote cabin in the woods, trying to escape painful memories of war. The drama begins when KOVAC, a former Serbian soldier, seeks Ford out, hoping to settle an old score. What follows is a cat-and-mouse game in which Ford and Kovac fight their own personal World War III, with battles both physical and psychological. By the end of the film, old wounds are opened, suppressed memories are drawn to the surface and long-hidden secrets about both Ford and Kovac are revealed.");
-        testValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION,  "Two veterans of the Bosnian War - one American, one Serbian - find their unlikely friendship tested when one of them reveals their true intentions.");
-        testValues.put(MovieContract.MovieEntry.COLUMN_POSTER, "https://images-na.ssl-images-amazon.com/images/M/MV5BOTQ2MzA3MTk3MV5BMl5BanBnXkFtZTcwMDM5ODk2OQ@@._V1_UX182_CR0,0,182,268_AL_.jpg");
-
-
-        long locationRowId = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, testValues);
-        if (locationRowId == -1) {
-            Log.i(LOG_TAG, "Failed to insert row !");
-        }
-
-        Cursor cursor = db.query(
-                MovieContract.MovieEntry.TABLE_NAME, //Table to Query
-                null, // all columns
-                null, // Columns for the "where" clause
-                null, // Values for the "where" clause
-                null, // columns to group by
-                null, // columns to filter by row groups
-                null // sort order
-        );
-
-        if (cursor.moveToFirst()) {
-            do {
-                int columnIndex =
-                        cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
-                Log.i(LOG_TAG, "Retrieving entry: " + cursor.getString(columnIndex));
-            } while (cursor.moveToNext());
-        } else {
-            Log.i(LOG_TAG, "No results from Location table!");
-        }
-
-        cursor.close();
-        db.close();
-    }
-
 
     public static int getNumberDBRows(){
         db = dbHelper.getReadableDatabase();
@@ -233,6 +186,10 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
         public void onMovieSelected(String s);
     }
 
+    public interface databaseEmpty {
+        public void onDatabaseFragment();
+    }
+
     public class MyAdapter extends ArrayAdapter<String> {
 
         private Context context;
@@ -242,6 +199,10 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
             super(context, R.layout.row, values);
             this.context = context;
             this.values = values;
+        }
+
+        public int getSize(){
+            return values.size();
         }
 
         @Override
@@ -256,21 +217,9 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
 
             String description[] = values.get(position).split("_");
 
-            myTitle.setText(description[0] + " ("+description[1]+")");
+            myTitle.setText(description[0] + " ("+description[1].split("-")[0]+")");
             myDescription.setText(description[2]);
 
-            Log.i("DESCRIPTION3", description[3]);
-
-            /*
-            try {
-                Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(description[3]).getContent());
-                imageView.setImageBitmap(bitmap);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            */
             new ImageLoadTaskFavorites(description[3], imageView).execute();
 
             return rowView;

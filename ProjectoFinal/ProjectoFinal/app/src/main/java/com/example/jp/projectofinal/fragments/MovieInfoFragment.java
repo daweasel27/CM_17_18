@@ -1,5 +1,7 @@
 package com.example.jp.projectofinal.fragments;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.activities.FavoritesActivity;
@@ -36,6 +39,7 @@ public class MovieInfoFragment extends Fragment {
 
     private static final String TAG = "MOVIE_TITLE";
     private static final String LOG_TAG = "LOG_TAG";
+    private boolean movieOnDB = true;
 
     private static MovieDbHelper dbHelper;
     private static SQLiteDatabase db;
@@ -51,6 +55,15 @@ public class MovieInfoFragment extends Fragment {
     private TextView textViewStoryLine;
     private ImageButton imageButtonHeart;
     private ImageButton imageButtonBack;
+
+    private String poster=null;
+    private String title =null;
+    private String release_date = null;
+    private String rating =null;
+    private String overview=null;
+    private String tagline=null;
+    private String genres=null;
+    private String runtime=null;
 
 
     public MovieInfoFragment() {
@@ -72,7 +85,7 @@ public class MovieInfoFragment extends Fragment {
         dbHelper = new MovieDbHelper(getActivity());
 
         Bundle bundle = getArguments();
-        String movie_title = bundle.getString(TAG);
+        final String movie_title = bundle.getString(TAG);
         Log.i(TAG, movie_title);
 
         imageViewMovie = (ImageView) view.findViewById(R.id.imageViewMovie);
@@ -95,7 +108,91 @@ public class MovieInfoFragment extends Fragment {
                 startActivity(intentFavs);
         }});
 
+        imageButtonHeart.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View view) {
+                if(movieOnDB){
+                    removeFromDB(movie_title);
+                    //deleteDB();
+                    movieOnDB = false;
+                    Context context = view.getContext();
+                    Toast toast = Toast.makeText(context, "Movie removed from database", Toast.LENGTH_SHORT);
+                    toast.show();
+                }else{
+                    addTestDB();
+                    Context context = view.getContext();
+                    Toast toast = Toast.makeText(context, "Movie added to database", Toast.LENGTH_SHORT);
+                    toast.show();
+                    movieOnDB=true;
+                }
+
+            }});
+
         return view;
+    }
+
+    public void deleteDB(){
+        getContext().deleteDatabase("movies.db");
+    }
+
+    private void removeFromDB(String movie_title){
+        Log.d("REMOVE", "REMOVE");
+
+        db = dbHelper.getWritableDatabase();
+
+        String movieT = ("\""+movie_title+"\"");
+        db.execSQL("DELETE FROM "+MovieContract.MovieEntry.TABLE_NAME+" WHERE "+MovieContract.MovieEntry.COLUMN_TITLE+" = " + movieT+";");
+
+        imageButtonHeart.setImageResource(R.drawable.heart_small);
+
+        db.close();
+    }
+
+    public void addTestDB(){
+        Log.d("addTestDB_MSF", "addTestDB_MSF");
+        db = dbHelper.getWritableDatabase();
+
+        ContentValues testValues = new ContentValues();
+
+        testValues.put(MovieContract.MovieEntry.COLUMN_TITLE, this.title);
+        testValues.put(MovieContract.MovieEntry.COLUMN_YEAR, this.release_date);
+        testValues.put(MovieContract.MovieEntry.COLUMN_LENGTH, this.runtime);
+        testValues.put(MovieContract.MovieEntry.COLUMN_RATING, Double.parseDouble(this.rating));
+        testValues.put(MovieContract.MovieEntry.COLUMN_GENRE, this.genres);
+        testValues.put(MovieContract.MovieEntry.COLUMN_STORY_LINE, this.overview);
+        testValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, this.tagline);
+        testValues.put(MovieContract.MovieEntry.COLUMN_POSTER, this.poster);
+
+
+        long locationRowId = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, testValues);
+        if (locationRowId == -1) {
+            Log.i(LOG_TAG, "Failed to insert row !");
+        }
+
+        Cursor cursor = db.query(
+                MovieContract.MovieEntry.TABLE_NAME, //Table to Query
+                null, // all columns
+                null, // Columns for the "where" clause
+                null, // Values for the "where" clause
+                null, // columns to group by
+                null, // columns to filter by row groups
+                null // sort order
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                int columnIndex =
+                        cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
+                Log.i(LOG_TAG, "Retrieving entry: " + cursor.getString(columnIndex));
+            } while (cursor.moveToNext());
+        } else {
+            Log.i(LOG_TAG, "No results from Location table!");
+        }
+
+        imageButtonHeart.setImageResource(R.drawable.heartfull_small);
+
+        cursor.close();
+        db.close();
     }
 
 
@@ -160,19 +257,35 @@ public class MovieInfoFragment extends Fragment {
         try {
             Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(poster).getContent());
             imageViewMovie.setImageBitmap(bitmap);
+            this.poster = poster;
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        this.title = title;
         textViewTitle.setText(title);
-        textViewLength.setText(length + "min");
-        textViewRating.setText(rating +"/10.0");
-        textViewReleaseDate.setText(year);
-        textViewGenre.setText(genre);
-        textViewDescription.setText(description);
-        textViewStoryLine.setText(storyLine);
+
+        this.runtime = length;
+        textViewLength.setText(this.runtime + "min");
+
+        this.rating = rating.toString();
+
+        textViewRating.setText(this.rating +"/10.0");
+
+        this.release_date = year;
+        textViewReleaseDate.setText(this.release_date);
+
+        this.genres = genre;
+        textViewGenre.setText(this.genres);
+
+        this.tagline = description;
+        textViewDescription.setText(this.tagline);
+
+        this.overview = storyLine;
+        textViewStoryLine.setText(this.overview);
+
         imageButtonHeart.setImageResource(R.drawable.heartfull_small);
 
         cursor.close();
