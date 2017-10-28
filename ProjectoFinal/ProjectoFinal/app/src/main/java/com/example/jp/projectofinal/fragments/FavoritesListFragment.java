@@ -77,12 +77,9 @@ public class FavoritesListFragment extends Fragment implements View.OnClickListe
             myAdapter.add(dayEntry);
         }
 
-        if(myAdapter.getSize() == 0){
-            Context context = view.getContext();
-            Toast toast = Toast.makeText(context, "You have no favorite movies ...", Toast.LENGTH_SHORT);
-            toast.show();
+        if(myAdapter.getSize() == 0)
             mDatabaseListener.onDatabaseFragment();
-        }
+
 
         listView = (ListView) view.findViewById(R.id.list_view);
         listView.setAdapter(myAdapter);

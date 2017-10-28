@@ -66,7 +66,6 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
 
         myAdapter.clear();
         for (MovieInfo movie : list ) {
-            Log.d("DAY_ENTRY", movie.getId());
             myAdapter.add(movie.getId()+":"+movie.getTitle()+":"+movie.getVote_average()+":"+movie.getRelease_date()+ ":" +movie.getBackdrop_path());
         }
 
