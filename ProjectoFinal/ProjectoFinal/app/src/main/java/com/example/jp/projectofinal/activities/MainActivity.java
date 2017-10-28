@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
     private ImageView one = null;
     private ImageView favsImage;
+    private ImageView googleImg;
 
     public static MoviesSuggestionInfo mv;
     public static SaveToFile sv;
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
-
 
         mFirebaseInstance = FirebaseDatabase.getInstance();
 
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         one = (ImageView)findViewById(R.id.imageViewStart);
         favsImage = (ImageView) findViewById(R.id.imageViewFavorites);
+        googleImg = (ImageView) findViewById(R.id.imageViewGoogle);
 
 
         one.setOnClickListener(new View.OnClickListener(){
@@ -64,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intentFavs = new Intent(MainActivity.this, FavoritesActivity.class);
             startActivity(intentFavs);
         }});
+
+        googleImg.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View view) {
+                Intent intentFavs = new Intent(MainActivity.this, MovieEmotionalProfileActivity.class);
+                startActivity(intentFavs);
+            }});
     }
 
 
@@ -78,17 +86,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.view_home_page:
-                setContentView(R.layout.home_page);
-                return true;
-            case R.id.view_suggestion_list:
-                setContentView(R.layout.suggestion_list);
-                return true;
-            case R.id.view_movies_suggestions:
-                setContentView(R.layout.movie_suggestion);
-                return true;
-            case R.id.view_trailer:
-                setContentView(R.layout.trailer_watch);
+            case R.id.settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

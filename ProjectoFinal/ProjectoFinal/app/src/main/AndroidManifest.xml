@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup,android:label">
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,9 +26,19 @@
         </activity>
         <activity android:name=".WatchTrailer" />
         <activity android:name=".activities.Camera" />
-        <activity android:name=".YoutubePlayer" />
-        <activity android:name=".activities.SuggestionActivity"></activity>
-        <activity android:name=".activities.FavoritesActivity"></activity>
+        <activity android:name=".youtubePlayer.YoutubePlayer" />
+        <activity android:name=".activities.SuggestionActivity" />
+        <activity android:name=".activities.FavoritesActivity" />
+        <activity android:name=".activities.MovieEmotionalProfileActivity" />
+
+        <activity android:name=".activities.SettingsActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity">
+            </meta-data>
+        </activity>
     </application>
 
 </manifest>

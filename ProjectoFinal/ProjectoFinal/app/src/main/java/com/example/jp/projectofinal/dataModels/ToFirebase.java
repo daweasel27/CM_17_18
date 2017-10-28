@@ -12,7 +12,6 @@ public class ToFirebase {
     private String userName;
     private String movieName;
     private String movieGenre;
-
     private Map<String, Double> valuesList = new HashMap<>();
 
     public ToFirebase() {
@@ -23,6 +22,10 @@ public class ToFirebase {
         this.movieName = movieName;
         this.movieGenre = movieGenre;
         this.valuesList = valuesList;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public String getMovieName() {
