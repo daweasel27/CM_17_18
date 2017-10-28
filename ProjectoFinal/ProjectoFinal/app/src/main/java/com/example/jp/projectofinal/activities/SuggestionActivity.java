@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.dataModels.MovieInfo;
+import com.example.jp.projectofinal.fragments.FavoritesListFragment;
+import com.example.jp.projectofinal.fragments.MovieInfoFragment;
+import com.example.jp.projectofinal.fragments.MovieSuggestionInfoFragment;
 import com.example.jp.projectofinal.fragments.SuggestionListFragment;
 
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
  * Created by TiagoHenriques on 13/10/2017.
  */
 public class SuggestionActivity extends AppCompatActivity
+        implements SuggestionListFragment.OnMovieSelectedListener
          {
     ArrayList<MovieInfo> list;
     //private TextView textViewTest;
@@ -62,5 +66,20 @@ public class SuggestionActivity extends AppCompatActivity
                     .add(R.id.layout_suggestions_list_fragment, dailyListFragment).commit();
         }
     }
+     @Override
+     public void onMovieSelected(String s) {
+         Log.d("onMovieSelected", "onMovieSelected");
+         setContentView(R.layout.fragment_movie_details);
+         MovieSuggestionInfoFragment detailsFragment = new MovieSuggestionInfoFragment();
+         Bundle args = new Bundle();
+         args.putString("arg", s);
+         // In case this activity was started with special instructions from an
+         // Intent, pass the Intent's extras to the fragment as arguments
+         detailsFragment.setArguments(args);
+
+         // Add the fragment to the 'fragment_container' FrameLayout
+         getSupportFragmentManager().beginTransaction()
+                 .replace(R.id.layout_container_movie_details_fragment, detailsFragment).commit();
+     }
 }
 

@@ -25,7 +25,7 @@ import java.net.URL;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieSuggestionInfoFragment extends Fragment {
+public class MovieSuggestionInfoFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = "MOVIE_TITLE";
     private static final String LOG_TAG = "LOG_TAG";
@@ -92,5 +92,10 @@ public class MovieSuggestionInfoFragment extends Fragment {
         textViewTitle.setText(title + " ("+year+")");
         textViewRating.setText(rating +"/10.0");
         textViewDescription.setText(description);
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

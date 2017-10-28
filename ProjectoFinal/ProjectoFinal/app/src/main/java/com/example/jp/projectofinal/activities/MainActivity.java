@@ -13,6 +13,8 @@ import com.example.jp.projectofinal.MovieSuggestion;
 import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.SaveToFile;
 import com.example.jp.projectofinal.dataModels.MoviesSuggestionInfo;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView one = null;
@@ -27,6 +29,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_page);
+
+
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World!");
 
         mv = new MoviesSuggestionInfo();
         mv.initializeMovies();

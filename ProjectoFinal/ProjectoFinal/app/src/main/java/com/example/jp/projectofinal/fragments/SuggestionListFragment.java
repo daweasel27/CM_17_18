@@ -48,6 +48,8 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_suggestion_list, container, false);
 
+
+
         myAdapter = new MyAdapter(
                 getActivity(),
                 new ArrayList<String>());
@@ -63,15 +65,13 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s = myAdapter.getItem(position);
+                String s = myAdapter.getItem(position).split(":")[0];
+                Log.e("nome filme", s);
                 Context context = view.getContext();
                 Toast toast = Toast.makeText(context, s, Toast.LENGTH_SHORT);
                 toast.show();
                 mListener.onMovieSelected(s);
-                Intent in = new Intent(getActivity(),
-                        MovieInfoActivity.class);
-                in.putExtra("info", s);
-                startActivity(in);
+
             }
         });
 
@@ -86,6 +86,18 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
     @Override
     public void onClick(View v) {
 
+    }
+
+    // Container Activity must implement this interface
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnMovieSelectedListener) {
+            mListener = (OnMovieSelectedListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnDaySelectedListener");
+        }
     }
 
     public class MyAdapter extends ArrayAdapter<String> {

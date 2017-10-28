@@ -29,7 +29,7 @@ import java.net.URL;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MovieInfoFragment extends Fragment {
+public class MovieInfoFragment extends Fragment  {
 
     private static final String TAG = "MOVIE_TITLE";
     private static final String LOG_TAG = "LOG_TAG";
