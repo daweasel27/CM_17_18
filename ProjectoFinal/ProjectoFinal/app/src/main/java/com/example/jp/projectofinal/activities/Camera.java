@@ -1,13 +1,18 @@
 package com.example.jp.projectofinal.activities;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -44,6 +49,8 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     SurfaceView cameraPreview;
 
     boolean isSDKStarted = false;
+    private boolean portrait = true;
+    private boolean enableRec = true;
 
     RelativeLayout mainLayout;
 
@@ -52,6 +59,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     int previewHeight = 0;
     static final Integer CAMERA = 0x5;
     private static final int RECORD_REQUEST_CODE = 101;
+
 
     private YouTubePlayerView playerView;
     private ImageView imageViewPlayControl;
@@ -81,6 +89,16 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
 
     }
 
+
+    public void getOrientation()
+    {
+        if(getResources().getDisplayMetrics().widthPixels>getResources().getDisplayMetrics().heightPixels)
+            this.portrait = false;
+        else
+            this.portrait = true;
+    }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -98,11 +116,24 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         }
     }
 
+    private void defaultSetup(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean facialRec = sharedPreferences.getBoolean("show_bass", true);
+        if (facialRec)
+            this.enableRec = true;
+        else
+            this.enableRec = false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_youtube_player);
 
+        defaultSetup();
+        if(this.enableRec)
+            setContentView(R.layout.activity_youtube_player);
+        else
+            setContentView(R.layout.activity_youtube_player_without_rec);
 
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -111,6 +142,8 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             makeRequest();
         }
 
+        getOrientation();
+
         MainActivity.sv.setFile("values.txt");
 
         imageViewPlayControl = (ImageView) findViewById(R.id.imageViewPlayControl);
@@ -118,7 +151,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         playerView = (YouTubePlayerView) findViewById(R.id.youtube_player);
         playerView.initialize(DEVELOPER_KEY, this);
 
-        playbackEventListener = new MyPlaybackEventListener();
+        playbackEventListener = new MyPlaybackEventListener(this.enableRec);
 
         //We create a custom SurfaceView that resizes itself to match the aspect ratio of the incoming camera frames
         mainLayout = (RelativeLayout) findViewById(R.id.main_relative_layout);
@@ -126,8 +159,15 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         cameraPreview = new SurfaceView(this) {
             @Override
             public void onMeasure(int widthSpec, int heightSpec) {
-                int measureWidth = 200;
-                int measureHeight = 350;
+                int measureWidth;
+                int measureHeight;
+                if(enableRec){
+                    measureWidth = 200;
+                    measureHeight = 350;
+                }else{
+                    measureWidth = 0;
+                    measureHeight = 0;
+                }
                 int width;
                 int height;
                 if (previewHeight == 0 || previewWidth == 0) {
@@ -148,9 +188,13 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
                 setMeasuredDimension(width,height);
             }
         };
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_TOP, RelativeLayout.TRUE);
-        params.addRule(RelativeLayout.ALIGN_LEFT);
+        if(portrait)
+            params.addRule(RelativeLayout.ALIGN_LEFT);
+        else
+            params.setMargins(60, 0,0, 0);
         cameraPreview.setLayoutParams(params);
         mainLayout.addView(cameraPreview, 0);
         //mainLayout.bringChildToFront(cameraPreview); // To put facial rec on the front - it pause the video
@@ -171,7 +215,10 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
         player.setPlaybackEventListener(playbackEventListener);
-        player.setShowFullscreenButton(false);
+        if(this.enableRec)
+            player.setShowFullscreenButton(true);
+        else
+            player.setShowFullscreenButton(false);
         player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
         if (!wasRestored) {
             new LoadYTVideoAsyncTask().execute(player);
@@ -273,11 +320,17 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
 
     private final class MyPlaybackEventListener implements YouTubePlayer.PlaybackEventListener, YouTubePlayer.PlayerStateChangeListener {
 
+        private boolean enableRec;
+
+        private MyPlaybackEventListener(boolean enableRec){
+            this.enableRec = enableRec;
+        }
         @Override
         public void onPlaying() {
             // Called when playback starts, either due to user action or call to play().
             showMessage("Playing Facial Recognition");
-            imageViewPlayControl.setImageResource(R.drawable.on_small);
+            if(this.enableRec)
+                imageViewPlayControl.setImageResource(R.drawable.on_small);
             startDetector();
         }
 
@@ -285,7 +338,8 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         public void onPaused() {
             // Called when playback is paused, either due to user action or call to pause().
             showMessage("Paused Facial Recognition");
-            imageViewPlayControl.setImageResource(R.drawable.of_small);
+            if(this.enableRec)
+                imageViewPlayControl.setImageResource(R.drawable.of_small);
             stopDetector();
         }
 

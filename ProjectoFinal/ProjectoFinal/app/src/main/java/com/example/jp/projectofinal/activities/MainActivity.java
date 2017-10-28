@@ -64,17 +64,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.view_home_page:
-                setContentView(R.layout.home_page);
-                return true;
-            case R.id.view_suggestion_list:
-                setContentView(R.layout.suggestion_list);
-                return true;
-            case R.id.view_movies_suggestions:
-                setContentView(R.layout.movie_suggestion);
-                return true;
-            case R.id.view_trailer:
-                setContentView(R.layout.trailer_watch);
+            case R.id.settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
