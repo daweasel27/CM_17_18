@@ -7,7 +7,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -53,7 +56,8 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     private static final int RECORD_REQUEST_CODE = 101;
 
     private YouTubePlayerView playerView;
-
+    private ImageView imageViewPlayControl;
+    private Button skipButton;
     private static final int RECOVERY_REQUEST = 1;
 
     private void askForPermission(String permission, Integer requestCode) {
@@ -111,8 +115,22 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
 
         MainActivity.sv.setFile("values.txt");
 
+        imageViewPlayControl = (ImageView) findViewById(R.id.imageViewPlayControl);
+        skipButton = (Button) findViewById(R.id.skip);
+
+        skipButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+                stopDetector();
+                MainActivity.sv.saveList();
+
+            }
+        });
+
         playerView = (YouTubePlayerView) findViewById(R.id.youtube_player);
         playerView.initialize(DEVELOPER_KEY, this);
+
+
 
         playbackEventListener = new MyPlaybackEventListener();
 
@@ -207,10 +225,11 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     void stopDetector() {
         if (detector.isRunning()) {
             detector.stop();
-            MainActivity.sv.saveList();
 
         }
     }
+
+
 
     @Override
     public void onImageResults(List<Face> list, Frame frame, float v) {
@@ -220,9 +239,9 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             //smileTextView.setText("NO FACE");
             //joyTextView.setText("");
             //angerTextView.setText("");
-
             //Toast toast = Toast.makeText(getApplicationContext(), "Not recognizing a face", Toast.LENGTH_SHORT);
             //toast.show();
+            imageViewPlayControl.setImageResource(R.drawable.of_small);
 
         } else {
             Face face = list.get(0);
@@ -232,20 +251,23 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
 
             //Log.d("SMILE", String.format("SMILE\n%.2f",face.expressions.getSmile()));
 
-            MainActivity.sv.addValuesExpressions("smile",face.expressions.getSmile(), MainActivity.mv.getLastWatchedTrailer());
-            MainActivity.sv.addValuesExpressions("anger", face.emotions.getAnger(), MainActivity.mv.getLastWatchedTrailer());
-            MainActivity.sv.addValuesExpressions("joy", face.emotions.getJoy(), MainActivity.mv.getLastWatchedTrailer());
-            MainActivity.sv.addValuesExpressions("fear", face.emotions.getFear(), MainActivity.mv.getLastWatchedTrailer());
-            MainActivity.sv.addValuesExpressions("attention", face.expressions.getAttention(), MainActivity.mv.getLastWatchedTrailer());
+            imageViewPlayControl.setImageResource(R.drawable.on_small);
 
+            try{
+                MainActivity.sv.addValuesExpressions("smile",face.expressions.getSmile(), MainActivity.mv.getLastWatchedTrailer());
+                MainActivity.sv.addValuesExpressions("anger", face.emotions.getAnger(), MainActivity.mv.getLastWatchedTrailer());
+                MainActivity.sv.addValuesExpressions("joy", face.emotions.getJoy(), MainActivity.mv.getLastWatchedTrailer());
+                MainActivity.sv.addValuesExpressions("fear", face.emotions.getFear(), MainActivity.mv.getLastWatchedTrailer());
+                MainActivity.sv.addValuesExpressions("attention", face.expressions.getAttention(), MainActivity.mv.getLastWatchedTrailer());
+            }catch (NullPointerException e){
+                e.printStackTrace();
+            }
 
             //Log.d("JOY", String.format("JOY\n%.2f",face.emotions.getJoy()));
             //Log.d("ANGER",String.format("ANGER\n%.2f",face..getAnger()));
 
             //Face feature points coordinates
             //PointF[] points = face.getFacePoints();
-
-
         }
     }
 
@@ -274,6 +296,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         public void onPlaying() {
             // Called when playback starts, either due to user action or call to play().
             showMessage("Playing Facial Recognition");
+            //imageViewPlayControl.setImageResource(R.drawable.on_small);
             startDetector();
         }
 
@@ -281,6 +304,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         public void onPaused() {
             // Called when playback is paused, either due to user action or call to pause().
             showMessage("Paused Facial Recognition");
+            imageViewPlayControl.setImageResource(R.drawable.of_small);
             stopDetector();
         }
 

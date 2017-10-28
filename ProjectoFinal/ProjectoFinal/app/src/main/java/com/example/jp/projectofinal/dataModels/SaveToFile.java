@@ -1,10 +1,9 @@
-package com.example.jp.projectofinal;
+package com.example.jp.projectofinal.dataModels;
 
 import android.os.Environment;
 import android.util.Log;
 
 import com.example.jp.projectofinal.activities.MainActivity;
-import com.example.jp.projectofinal.dataModels.ValuesToStore;
 
 import java.io.BufferedWriter;
 import java.io.File;

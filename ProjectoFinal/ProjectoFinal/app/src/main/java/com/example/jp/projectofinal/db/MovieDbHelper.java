@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static int DATABASE_VERSION = 1;
 
     static final String DATABASE_NAME = "movies.db";
 
@@ -33,11 +33,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 // the ID of the location entry associated with this movie data
                 MovieContract.MovieEntry.COLUMN_TITLE + " TEXT UNIQUE NOT NULL, " +
 
-                MovieContract.MovieEntry.COLUMN_DIRECTOR + " TEXT NOT NULL, " +
-
-                MovieContract.MovieEntry.COLUMN_STARS + " TEXT NOT NULL, " +
-
-                MovieContract.MovieEntry.COLUMN_YEAR + " INTEGER NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_YEAR + " TEXT NOT NULL, " +
 
                 MovieContract.MovieEntry.COLUMN_LENGTH + " INTEGER NOT NULL, " +
 
@@ -47,11 +43,9 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
                 MovieContract.MovieEntry.COLUMN_STORY_LINE + " TEXT NOT NULL, " +
 
-                MovieContract.MovieEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_DESCRIPTION + " TEXT NULL, " +
 
-                MovieContract.MovieEntry.COLUMN_POSTER + " TEXT NOT NULL, " +
-
-                MovieContract.MovieEntry.COLUMN_THUMB + " TEXT NOT NULL);";
+                MovieContract.MovieEntry.COLUMN_POSTER + " TEXT NOT NULL);";
 
         // To assure the application have just one weather entry per day
         // per location, it's created a UNIQUE constraint with REPLACE strategy

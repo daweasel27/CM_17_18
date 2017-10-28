@@ -26,10 +26,6 @@ public class MovieContract {
 
         public static final String COLUMN_TITLE = "title";
 
-        public static final String COLUMN_DIRECTOR = "director";
-
-        public static final String COLUMN_STARS = "stars";
-
         public static final String COLUMN_YEAR = "year";
 
         public static final String COLUMN_LENGTH = "length";
@@ -41,8 +37,6 @@ public class MovieContract {
         public static final String COLUMN_DESCRIPTION = "description";
 
         public static final String COLUMN_STORY_LINE = "storyline";
-
-        public static final String COLUMN_THUMB = "thumb";
 
         public static final String COLUMN_POSTER = "poster";
     }

@@ -10,6 +10,7 @@ import com.example.jp.projectofinal.dataModels.MovieInfo;
 import com.example.jp.projectofinal.fragments.FavoritesListFragment;
 import com.example.jp.projectofinal.fragments.MovieInfoFragment;
 import com.example.jp.projectofinal.fragments.MovieSuggestionInfoFragment;
+import com.example.jp.projectofinal.fragments.MovieSuggestionFragment;
 import com.example.jp.projectofinal.fragments.SuggestionListFragment;
 
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ import java.util.ArrayList;
 public class SuggestionActivity extends AppCompatActivity
         implements SuggestionListFragment.OnMovieSelectedListener
          {
-    ArrayList<MovieInfo> list;
+             ArrayList<MovieInfo> list;
+    private final static String MOVIE_ID_TAG = "MOVIE_ID_TAG";
     //private TextView textViewTest;
 
 
@@ -40,10 +42,6 @@ public class SuggestionActivity extends AppCompatActivity
             Log.d("lista", movie.getTitle());
         }
         getFragment(savedInstanceState);
-
-        //textViewTest = (TextView) findViewById(R.id.textViewTest);
-        //final String[] daysLabels = getTheWeatherForecast();
-        //textViewTest.setText(daysLabels[0]);
     }
 
     private void getFragment(Bundle savedInstanceState){
@@ -66,6 +64,8 @@ public class SuggestionActivity extends AppCompatActivity
                     .add(R.id.layout_suggestions_list_fragment, dailyListFragment).commit();
         }
     }
+
+    /*
      @Override
      public void onMovieSelected(String s) {
          Log.d("onMovieSelected", "onMovieSelected");
@@ -73,6 +73,16 @@ public class SuggestionActivity extends AppCompatActivity
          MovieSuggestionInfoFragment detailsFragment = new MovieSuggestionInfoFragment();
          Bundle args = new Bundle();
          args.putString("arg", s);
+     }*/
+
+    @Override
+     public void onMovieSelected(Integer s) {
+         Log.d("OM_SUGGESTION", "OM_SUGGESTION");
+
+         setContentView(R.layout.fragment_suggestion_details);
+         MovieSuggestionFragment detailsFragment = new MovieSuggestionFragment();
+         Bundle args = new Bundle();
+         args.putInt(MOVIE_ID_TAG, s);
          // In case this activity was started with special instructions from an
          // Intent, pass the Intent's extras to the fragment as arguments
          detailsFragment.setArguments(args);
@@ -81,5 +91,6 @@ public class SuggestionActivity extends AppCompatActivity
          getSupportFragmentManager().beginTransaction()
                  .replace(R.id.layout_container_movie_details_fragment, detailsFragment).commit();
      }
-}
+
+ }
 

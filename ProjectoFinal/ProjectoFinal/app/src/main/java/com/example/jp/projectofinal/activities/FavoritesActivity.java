@@ -13,28 +13,23 @@ import com.example.jp.projectofinal.fragments.MovieInfoFragment;
  * Created by TiagoHenriques on 17/10/2017.
  */
 public class FavoritesActivity extends AppCompatActivity
-        implements FavoritesListFragment.OnMovieSelectedListener{
+        implements FavoritesListFragment.OnMovieSelectedListener,
+            FavoritesListFragment.databaseEmpty {
 
     private static final String TAG = "MOVIE_TITLE";
-
-    //private TextView textViewTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_suggestion_list);
+        setContentView(R.layout.fragment_favorites_list);
 
         getFragment(savedInstanceState);
-
-        //textViewTest = (TextView) findViewById(R.id.textViewTest);
-        //final String[] daysLabels = getTheWeatherForecast();
-        //textViewTest.setText(daysLabels[0]);
     }
 
     private void getFragment(Bundle savedInstanceState){
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
-        if (findViewById(R.id.layout_suggestions_list_fragment) != null) {
+        if (findViewById(R.id.layout_favorites_list_fragment) != null) {
 
             // However, if we're being restored from a previous state,
             // then we don't need to do anything and should return or else
@@ -48,7 +43,7 @@ public class FavoritesActivity extends AppCompatActivity
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.layout_suggestions_list_fragment, dailyListFragment).commit();
+                    .add(R.id.layout_favorites_list_fragment, dailyListFragment).commit();
         }
     }
 
@@ -67,6 +62,11 @@ public class FavoritesActivity extends AppCompatActivity
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layout_container_movie_details_fragment, detailsFragment).commit();
+    }
+
+    @Override
+    public void onDatabaseFragment() {
+        setContentView(R.layout.empty_database_fragment);
     }
 }
 

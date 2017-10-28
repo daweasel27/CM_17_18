@@ -7,7 +7,11 @@ import android.util.Log;
 
 import com.example.jp.projectofinal.activities.SuggestionActivity;
 import com.example.jp.projectofinal.dataModels.MovieInfo;
+import com.example.jp.projectofinal.dataModels.SaveToFile;
+import com.example.jp.projectofinal.dataModels.ToFirebase;
 import com.example.jp.projectofinal.dataModels.ValuesToStore;
+import com.example.jp.projectofinal.db.SendDataToFirebase;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,13 +36,15 @@ import java.util.Map;
 
 public class MovieSuggestion{
 
+    private final static String api_key = "5ea84afa0c7a5e8b2e3f94c9de502974";
     private Map<String, Integer> gender = new HashMap<>();
 
     private HashMap<String, List<ValuesToStore>> watched = new HashMap<>();
-    private Map<String, Double> results = new HashMap<>();
+
+    private Map<String,  Map<String, Double>> results = new HashMap<>();
     private Map<String, Double> resultsFinal = new HashMap<>();
     private List<String> genderWatched = new ArrayList<>();
-
+    private String movieN;
     private ArrayList<MovieInfo> suggestions = new ArrayList<>();
     int i = 0;
 
@@ -89,7 +95,7 @@ public class MovieSuggestion{
             valueName = vs1.getValueName();
             value = vs1.getValue();
             name = vs1.getMovieName();
-
+            movieN = name;
 
 
             if (firstPass.containsKey(name)) {
@@ -133,13 +139,14 @@ public class MovieSuggestion{
                 Double average = calcAverage(pair2.getValue());
 
                 resultsFinal.put(pair2.getKey(), average);
+                results.put(pair.getKey(),resultsFinal);
 
-                Log.e("valores",pair2.getKey() + average );
+                Log.e("valores - ",pair2.getKey() + average  + " filme - " + pair.getKey());
             }
         }
 
         suggest();
-
+        sendData();
         }
 
 
@@ -151,7 +158,37 @@ public class MovieSuggestion{
         return result / values.size();
     }
 
+    public void sendData(){
+        ToFirebase tf = new ToFirebase("Joao", movieN, String.valueOf(gender.get(genderWatched.get(0))),resultsFinal);
+        SendDataToFirebase sf = new SendDataToFirebase();
+        sf.send(tf);
+
+    }
+
     public void suggest(){
+        double max = 0;
+        String pass = "";
+        Iterator<Map.Entry<String, Map<String, Double>>> it4 = results.entrySet().iterator();
+        while (it4.hasNext()) {
+            Map.Entry<String, Map<String, Double>> pair = it4.next();
+            Iterator<Map.Entry<String, Double>> it3 = pair.getValue().entrySet().iterator();
+            while (it3.hasNext()) {
+                Map.Entry<String, Double> pair2 = it3.next();
+                if (pair2.getKey() == "attention" && pair2.getValue() > 90.0) {
+                    if(pair2.getValue() > max){
+                        max = pair2.getValue();
+                        pass = String.valueOf(gender.get(genderWatched.get(i)));
+                    }
+                    Log.e("final", genderWatched.get(i));
+                    Log.e("final", String.valueOf(gender.get(genderWatched.get(i))));
+                    i++;
+                }
+            }
+        }
+        if(pass != "")
+            new GetDataSync().execute(pass);
+
+        /*
 
         Iterator<Map.Entry<String, Double>> it3 = resultsFinal.entrySet().iterator();
         while (it3.hasNext()) {
@@ -162,7 +199,7 @@ public class MovieSuggestion{
                 new GetDataSync().execute(String.valueOf(gender.get(genderWatched.get(i))));
                 i++;
             }
-        }
+        }*/
 
     }
 
@@ -199,7 +236,7 @@ class GetDataSync extends AsyncTask<String, Void, String> {
 
 
     private void getData(String gender) throws IOException, JSONException {
-        JSONObject json = readJsonFromUrl("https://api.themoviedb.org/3/discover/movie?with_genres=" + gender + "&page=1&include_video=false&include_adult=false&sort_by=popularity.desc&language=en-US&api_key=7d1ca5ce15cfc2d3a71c265d6358e0d3");
+        JSONObject json = readJsonFromUrl("https://api.themoviedb.org/3/discover/movie?with_genres=" + gender + "&page=1&include_video=false&include_adult=false&sort_by=popularity.desc&language=en-US&api_key="+api_key);
         try {
             JSONObject json1;
             JSONArray arrJson = json.getJSONArray("results");
@@ -242,11 +279,6 @@ class GetDataSync extends AsyncTask<String, Void, String> {
             is.close();
 
         }
-
-
     }
-
-
-
 }
 }

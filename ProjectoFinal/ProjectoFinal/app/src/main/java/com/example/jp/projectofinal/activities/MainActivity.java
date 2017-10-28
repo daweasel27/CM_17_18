@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import com.example.jp.projectofinal.MovieSuggestion;
 import com.example.jp.projectofinal.R;
-import com.example.jp.projectofinal.SaveToFile;
+import com.example.jp.projectofinal.dataModels.SaveToFile;
 import com.example.jp.projectofinal.dataModels.MoviesSuggestionInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,11 +19,12 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
     private ImageView one = null;
     private ImageView favsImage;
-    private ImageView suggestionsImage;
 
     public static MoviesSuggestionInfo mv;
     public static SaveToFile sv;
     public static MovieSuggestion ms;
+    private DatabaseReference mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +32,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.home_page);
 
 
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+        mFirebaseInstance = FirebaseDatabase.getInstance();
 
-        myRef.setValue("Hello, World!");
+        // get reference to 'users' node
+        mFirebaseDatabase = mFirebaseInstance.getReference("users");
+
+        // store app title to 'app_title' node
+        mFirebaseInstance.getReference("app_title").setValue("Realtime Database");
+
 
         mv = new MoviesSuggestionInfo();
         mv.initializeMovies();
@@ -43,33 +47,24 @@ public class MainActivity extends AppCompatActivity {
         ms = new MovieSuggestion(getBaseContext());
 
         one = (ImageView)findViewById(R.id.imageViewStart);
-        suggestionsImage = (ImageView) findViewById(R.id.imageViewSuggestions);
         favsImage = (ImageView) findViewById(R.id.imageViewFavorites);
 
 
         one.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Camera.class);
-                startActivity(intent);
-            }});
+            Intent intent = new Intent(MainActivity.this, Camera.class);
+            startActivity(intent);
+        }});
 
-        suggestionsImage.setOnClickListener(new View.OnClickListener(){
-
-            public void onClick(View view) {
-                Intent intentFavs = new Intent(MainActivity.this, SuggestionActivity.class);
-                startActivity(intentFavs);
-            }});
 
         favsImage.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View view) {
-                Intent intentFavs = new Intent(MainActivity.this, FavoritesActivity.class);
-                startActivity(intentFavs);
-            }});
-
+            Intent intentFavs = new Intent(MainActivity.this, FavoritesActivity.class);
+            startActivity(intentFavs);
+        }});
     }
-
 
 
     @Override
