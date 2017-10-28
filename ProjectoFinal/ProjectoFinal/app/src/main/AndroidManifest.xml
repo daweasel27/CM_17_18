@@ -30,7 +30,6 @@
         <activity android:name=".activities.SuggestionActivity" />
         <activity android:name=".activities.FavoritesActivity" />
         <activity android:name=".activities.MovieEmotionalProfileActivity" />
-
         <activity android:name=".activities.SettingsActivity"
             android:label="@string/action_settings"
             android:parentActivityName=".activities.MainActivity">
