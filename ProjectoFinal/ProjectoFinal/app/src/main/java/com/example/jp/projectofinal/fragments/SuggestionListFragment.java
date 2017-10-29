@@ -69,7 +69,8 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
         List<MovieInfo> list2 = list.subList(0,10);
         myAdapter.clear();
         for (MovieInfo movie : list2 ) {
-            myAdapter.add(movie.getId()+":"+movie.getTitle()+":"+movie.getVote_average()+":"+movie.getRelease_date()+ ":" +movie.getBackdrop_path());
+
+            myAdapter.add(movie.getId()+"@"+movie.getTitle()+"@"+movie.getVote_average()+"@"+movie.getRelease_date()+ "@" +movie.getBackdrop_path());
         }
 
         listView = (ListView) view.findViewById(R.id.list_view);
@@ -125,7 +126,7 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
         }
 
         public int getId(int position){
-            String description[] = values.get(position).split(":");
+            String description[] = values.get(position).split("@");
             return Integer.parseInt(description[0]);
         }
 
@@ -140,12 +141,14 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
             TextView myDescription = (TextView) rowView.findViewById(R.id.text2);
             //ImageView heart = (ImageView) rowView.findViewById(R.id.imageViewHeart);
 
-            String description[] = values.get(position).split(":");
+            String description[] = values.get(position).split("@");
             Log.e("irl", "http://image.tmdb.org/t/p/w185//"+ description[4]);
 
             new ImageLoadTaskSuggestions("http://image.tmdb.org/t/p/w185"+ description[4], imageView).execute();
 
             myTitle.setText(description[1] + " - " + description[3].split("-")[0]);
+            Log.e("filme certt  ", description[2]);
+
             myDescription.setText(description[2]);
             // to test
             //heart.setImageResource(R.drawable.heartfull);

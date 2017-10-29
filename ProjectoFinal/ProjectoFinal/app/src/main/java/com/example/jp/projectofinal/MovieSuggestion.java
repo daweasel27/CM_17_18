@@ -230,7 +230,6 @@ class GetDataSync extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         try {
-            Log.e("que filmes esta a da2", params[0]);
 
             getData(params[0]);
         } catch (IOException e) {
@@ -251,6 +250,9 @@ class GetDataSync extends AsyncTask<String, Void, String> {
             String[] arr = new String[arrJson.length()];
             for(int i = 0; i < arrJson.length(); i++){
                 arr[i] = arrJson.getString(i);
+                Log.e("que filmes esta a da2", String.valueOf(arrJson.optJSONObject(i).get("poster_path")));
+                Log.e("que filmes esta a da2", String.valueOf(arrJson.optJSONObject(i).get("poster_path")));
+
                 MovieInfo mi = new MovieInfo(String.valueOf(arrJson.optJSONObject(i).get("title")),
                         String.valueOf(arrJson.optJSONObject(i).get("id")),
                         String.valueOf(arrJson.optJSONObject(i).get("poster_path")),
