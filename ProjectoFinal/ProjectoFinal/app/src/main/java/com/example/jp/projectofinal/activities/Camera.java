@@ -2,6 +2,7 @@ package com.example.jp.projectofinal.activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -27,6 +28,7 @@ import com.affectiva.android.affdex.sdk.detector.Detector;
 import com.affectiva.android.affdex.sdk.detector.Face;
 import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.asyncTasks.LoadYTVideoAsyncTask;
+import com.example.jp.projectofinal.dataModels.SaveToFile;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -44,6 +46,7 @@ import java.util.List;
  */
 public class Camera extends YouTubeBaseActivity implements Detector.ImageListener, CameraDetector.CameraEventListener,
         YouTubePlayer.OnInitializedListener {
+    public static SaveToFile sv;
     private boolean firstRun = false;
     private String DEVELOPER_KEY = "AIzaSyC3GrHmHq_a7MTpXJ2wzO9H5qryoYn7dJw";
 
@@ -55,7 +58,6 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     boolean isSDKStarted = false;
     private boolean portrait = true;
     private boolean enableRec = true;
-
     RelativeLayout mainLayout;
 
     CameraDetector detector;
@@ -130,9 +132,16 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        sv = new SaveToFile();
         defaultSetup();
         if(this.enableRec)
             setContentView(R.layout.activity_youtube_player);
@@ -148,7 +157,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
 
         getOrientation();
 
-        MainActivity.sv.setFile("values.txt");
+        sv.setFile("values.txt");
 
         imageViewPlayControl = (ImageView) findViewById(R.id.imageViewPlayControl);
         skipButton = (Button) findViewById(R.id.skip);
@@ -157,7 +166,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
                 stopDetector();
-                MainActivity.sv.saveList();
+                sv.saveList();
 
             }
         });
@@ -302,11 +311,11 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             imageViewPlayControl.setImageResource(R.drawable.on_small);
 
             try{
-                MainActivity.sv.addValuesExpressions("smile",face.expressions.getSmile(), MainActivity.mv.getLastWatchedTrailer());
-                MainActivity.sv.addValuesExpressions("anger", face.emotions.getAnger(), MainActivity.mv.getLastWatchedTrailer());
-                MainActivity.sv.addValuesExpressions("joy", face.emotions.getJoy(), MainActivity.mv.getLastWatchedTrailer());
-                MainActivity.sv.addValuesExpressions("fear", face.emotions.getFear(), MainActivity.mv.getLastWatchedTrailer());
-                MainActivity.sv.addValuesExpressions("attention", face.expressions.getAttention(), MainActivity.mv.getLastWatchedTrailer());
+                sv.addValuesExpressions("smile",face.expressions.getSmile(), MainActivity.mv.getLastWatchedTrailer());
+                sv.addValuesExpressions("anger", face.emotions.getAnger(), MainActivity.mv.getLastWatchedTrailer());
+                sv.addValuesExpressions("joy", face.emotions.getJoy(), MainActivity.mv.getLastWatchedTrailer());
+                sv.addValuesExpressions("fear", face.emotions.getFear(), MainActivity.mv.getLastWatchedTrailer());
+                sv.addValuesExpressions("attention", face.expressions.getAttention(), MainActivity.mv.getLastWatchedTrailer());
             }catch (NullPointerException e){
                 e.printStackTrace();
             }

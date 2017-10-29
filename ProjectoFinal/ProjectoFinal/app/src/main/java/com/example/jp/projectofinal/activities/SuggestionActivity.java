@@ -41,6 +41,30 @@ public class SuggestionActivity extends AppCompatActivity
         return list;
     }
 
+     @Override
+     public boolean onOptionsItemSelected(MenuItem item) {
+         switch (item.getItemId()) {
+             case android.R.id.home:
+                 if (frag == 1){
+                     setContentView(R.layout.fragment_suggestion_list);
+                     SuggestionListFragment dailyListFragment = new SuggestionListFragment(list);
+                     getSupportFragmentManager().beginTransaction()
+                             .replace(R.id.layout_suggestions_list_fragment, dailyListFragment)
+                             .addToBackStack(null)
+                             .commit();
+                     frag = 0;
+                 }
+                 else{
+                     Camera.sv.reset();
+                     Intent intent = new Intent(this, Camera.class);
+                     startActivity(intent);
+                 }
+                 return true;
+             default:
+                 return super.onOptionsItemSelected(item);
+         }
+     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,18 +142,7 @@ public class SuggestionActivity extends AppCompatActivity
 
      @Override
      public void onBackPressed() {
-
-         if (frag == 1){
-             setContentView(R.layout.fragment_suggestion_list);
-             SuggestionListFragment dailyListFragment = new SuggestionListFragment(list);
-             getSupportFragmentManager().beginTransaction()
-                     .replace(R.id.layout_suggestions_list_fragment, dailyListFragment)
-                        .addToBackStack(null)
-                            .commit();
-             frag = 0;
-         } else {
-             //super.onBackPressed();
-         }
+             super.onBackPressed();
      }
 
  }

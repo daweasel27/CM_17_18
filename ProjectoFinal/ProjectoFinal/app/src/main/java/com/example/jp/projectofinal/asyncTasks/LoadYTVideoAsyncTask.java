@@ -31,6 +31,7 @@ public class LoadYTVideoAsyncTask extends AsyncTask<YouTubePlayer, Void, Void> {
         player.loadVideo(value);
 
         MainActivity.mv.addWatchedTrailers(randomKey, value);
+        Log.e("filme a ver111   - --  ", randomKey);
 
         return null;
     }

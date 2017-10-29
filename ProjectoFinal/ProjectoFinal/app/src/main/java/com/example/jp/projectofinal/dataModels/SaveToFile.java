@@ -29,6 +29,9 @@ public class SaveToFile {
 
     //private HashMap<Integer, String> movieValues = new HashMap<>();
 
+    public void reset(){
+        valuesList.clear();
+    }
 
     public SaveToFile(){
     }

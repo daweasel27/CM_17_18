@@ -24,8 +24,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WatchTrailer" />
-        <activity android:name=".activities.Camera" />
+        <activity android:name=".WatchTrailer" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".activities.MainActivity">
+        </meta-data>
+    </activity>
+
+        <activity android:name=".activities.Camera" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity">
+            </meta-data>
+        </activity>
         <activity android:name=".youtubePlayer.YoutubePlayer" />
 
         <activity android:name=".activities.SuggestionActivity" >

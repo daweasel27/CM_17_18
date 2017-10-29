@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.jp.projectofinal.activities.Camera;
+import com.example.jp.projectofinal.activities.MainActivity;
 import com.example.jp.projectofinal.activities.SuggestionActivity;
 import com.example.jp.projectofinal.dataModels.MovieInfo;
 import com.example.jp.projectofinal.dataModels.SaveToFile;
@@ -76,7 +78,7 @@ public class MovieSuggestion{
     }
 
     public void parseResults(){
-        watched = SaveToFile.valuesList;
+        watched = Camera.sv.valuesList;
         putValues();
         List<ValuesToStore> vs = watched.get("Joao");
         if(vs == null){
@@ -179,12 +181,15 @@ public class MovieSuggestion{
                         max = pair2.getValue();
                         pass = String.valueOf(gender.get(genderWatched.get(i)));
                     }
-                    Log.e("final", genderWatched.get(i));
-                    Log.e("final", String.valueOf(gender.get(genderWatched.get(i))));
+                    //Log.e("final", genderWatched.get(i));
+                    //Log.e("final", String.valueOf(gender.get(genderWatched.get(i))));
                     i++;
                 }
             }
         }
+        suggestions.clear();
+        Log.e("que filmes esta a da", pass);
+
         if(pass != "")
             new GetDataSync().execute(pass);
 
@@ -225,6 +230,8 @@ class GetDataSync extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         try {
+            Log.e("que filmes esta a da2", params[0]);
+
             getData(params[0]);
         } catch (IOException e) {
             e.printStackTrace();

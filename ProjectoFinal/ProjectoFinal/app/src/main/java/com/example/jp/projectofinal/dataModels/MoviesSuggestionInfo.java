@@ -1,5 +1,7 @@
 package com.example.jp.projectofinal.dataModels;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,15 +27,18 @@ public class MoviesSuggestionInfo {
     }
 
     public void addWatchedTrailers(String name, String watched) {
+        watchedTrailers.clear();
         watchedTrailers.put(name, watched);
     }
 
     public String getLastWatchedTrailer(){
+
         Iterator<Map.Entry<String, String>> iterator = watchedTrailers.entrySet().iterator();
         Map.Entry<String, String> result = null;
         while (iterator.hasNext()) {
             result = iterator.next();
         }
+        Log.e("filme a ver   - --  ", result.getKey());
 
         return result.getKey();
     }
