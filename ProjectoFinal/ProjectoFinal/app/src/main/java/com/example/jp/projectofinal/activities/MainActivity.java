@@ -19,7 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
     private ImageView one = null;
     private ImageView favsImage;
-    private ImageView googleImg;
+    private ImageView profileImage;
 
     public static MoviesSuggestionInfo mv;
     public static SaveToFile sv;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         one = (ImageView)findViewById(R.id.imageViewStart);
         favsImage = (ImageView) findViewById(R.id.imageViewFavorites);
-        googleImg = (ImageView) findViewById(R.id.imageViewGoogle);
+        profileImage = (ImageView) findViewById(R.id.imageViewProfiles);
 
 
         one.setOnClickListener(new View.OnClickListener(){
@@ -68,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intentFavs);
         }});
 
-        googleImg.setOnClickListener(new View.OnClickListener(){
+        profileImage.setOnClickListener(new View.OnClickListener(){
 
             public void onClick(View view) {
-                Intent intentFavs = new Intent(MainActivity.this, MovieEmotionalProfileActivity.class);
-                startActivity(intentFavs);
-            }});
+            Intent intentFavs = new Intent(MainActivity.this, MovieEmotionalProfileActivity.class);
+            startActivity(intentFavs);
+        }});
     }
 
 

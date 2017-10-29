@@ -54,6 +54,10 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
     public MyAdapter myAdapter;
     public String[] resultStrs;
 
+    private static final int VIEW_TYPE_TODAY = 0;
+    private static final int VIEW_TYPE_FUTURE_DAY = 1;
+    private boolean mUseTodayLayout;
+
     public final List<ToFirebase> mJournalEntries = new ArrayList<>();
     public final HashMap<String, List<ToFirebase>> listMovies = new HashMap<>();
     public final HashMap<String, List<EmotionValues>> listFinal = new HashMap<>();
@@ -123,13 +127,18 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
                         myAdapter.clear();
 
                         for (String dayEntry : daysLabels) {
-
                             myAdapter.add(dayEntry);
-
                         }
 
-
                         listView.setAdapter(myAdapter);
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                String s = myAdapter.getItem(position);
+
+                            }
+                        });
+
                     }
                 }
 
@@ -185,23 +194,7 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
 
         Log.d("tropa", Integer.toString(resultStrs.length));
 
-        writeToFile(resultStrs, getContext());
-
     }
-
-
-    public void writeToFile(String data[],Context context){
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("movie_profiles.txt", Context.MODE_PRIVATE));
-            for(int i=0; i<data.length; i++)
-                outputStreamWriter.write(data[i]+"\n");
-            outputStreamWriter.close();
-        }
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -211,7 +204,6 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
     public class MyAdapter extends ArrayAdapter<String> {
 
         private Context context;
-        //final HashMap<String, List<EmotionValues>> values = new HashMap<>();
 
         private ArrayList<String> values;
 
@@ -230,15 +222,10 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
             LayoutInflater inflater = (LayoutInflater) context
                     .getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View rowView = inflater.inflate(R.layout.row, parent, false);
+            View rowView = inflater.inflate(R.layout.row_movie_profile, parent, false);
 
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             TextView myTitle = (TextView) rowView.findViewById(R.id.text1);
             TextView myDescription = (TextView) rowView.findViewById(R.id.text2);
-
-            //String description[] = values.get(position).split("_");
-
-            imageView.setImageResource(R.drawable.deadpool2);
 
             String movieValues[] = values.get(position).split("@");
 
@@ -247,12 +234,6 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
                                 + movieValues[3] + " - " + movieValues[4] + "\n"
                                 + movieValues[5] + " - " + movieValues[6] + "\n"
                                 + movieValues[7] + " - " + movieValues[8] + "\n");
-
-            //myTitle.setText(values.get(position));
-            //myDescription.setText(values.get(position));
-            //myDescription.setText("");
-            Log.e("olaaaaaaaaaaaaaaaa " , values.get(position));
-            //new ImageLoadTaskFavorites("https://www.subaru-global.com/technology/images/technology/drivetrain_awd/img07.jpg", imageView).execute();
 
             return rowView;
         }
