@@ -54,7 +54,6 @@ public class MovieInfoFragment extends Fragment  {
     private TextView textViewDescription;
     private TextView textViewStoryLine;
     private ImageButton imageButtonHeart;
-    private ImageButton imageButtonBack;
 
     private String poster=null;
     private String title =null;
@@ -97,16 +96,9 @@ public class MovieInfoFragment extends Fragment  {
         textViewDescription = (TextView) view.findViewById(R.id.textViewDescription);
         textViewStoryLine = (TextView) view.findViewById(R.id.textViewStoryLine);
         imageButtonHeart = (ImageButton) view.findViewById(R.id.imageViewHeartSuggestion);
-        imageButtonBack = (ImageButton) view.findViewById(R.id.imageButtonBack);
 
         populateFragment(movie_title);
 
-        imageButtonBack.setOnClickListener(new View.OnClickListener(){
-
-            public void onClick(View view) {
-                Intent intentFavs = new Intent(getContext(), FavoritesActivity.class);
-                startActivity(intentFavs);
-        }});
 
         imageButtonHeart.setOnClickListener(new View.OnClickListener(){
 

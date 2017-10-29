@@ -1,6 +1,7 @@
 package com.example.jp.projectofinal.activities;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.fragments.FavoritesListFragment;
 import com.example.jp.projectofinal.fragments.MovieInfoFragment;
+import com.example.jp.projectofinal.fragments.SuggestionListFragment;
 
 
 /**
@@ -20,12 +22,18 @@ public class FavoritesActivity extends AppCompatActivity
 
     private static final String TAG = "MOVIE_TITLE";
     public int frag = 0;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_favorites_list);
-
+        actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        // TODO: Remove the redundant calls to getSupportActionBar()
+        //       and use variable actionBar instead
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         getFragment(savedInstanceState);
     }
 
@@ -58,6 +66,8 @@ public class FavoritesActivity extends AppCompatActivity
 
     */
     private void getFragment(Bundle savedInstanceState){
+
+
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
         if (findViewById(R.id.layout_favorites_list_fragment) != null) {
@@ -92,11 +102,36 @@ public class FavoritesActivity extends AppCompatActivity
         // Intent, pass the Intent's extras to the fragment as arguments
         detailsFragment.setArguments(args);
 
-        //frag = 1;
+        frag = 1;
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.layout_container_movie_details_fragment, detailsFragment).commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (frag == 1){
+                    setContentView(R.layout.fragment_favorites_list);
+
+                    // Create a new Fragment to be placed in the activity layout
+                    FavoritesListFragment dailyListFragment = new FavoritesListFragment();
+
+                    // Add the fragment to the 'fragment_container' FrameLayout
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.layout_favorites_list_fragment, dailyListFragment).commit();
+                    frag = 0;
+                }
+                else{
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

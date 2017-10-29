@@ -100,7 +100,6 @@ public class MovieSuggestionFragment extends Fragment {
         textViewRating = (TextView) view.findViewById(R.id.textViewRating);
         textViewReleaseDateInput = (TextView) view.findViewById(R.id.textViewReleaseDateInput);
         textViewStoryLine = (TextView) view.findViewById(R.id.textViewStoryLine);
-        imageButtonBack = (ImageButton) view.findViewById(R.id.imageButtonBack);
 
         Bundle bundle = getArguments();
         Integer movie_id = bundle.getInt(MOVIE_ID_TAG);
@@ -123,15 +122,6 @@ public class MovieSuggestionFragment extends Fragment {
         }});
 
 
-        imageButtonBack.setOnClickListener(new View.OnClickListener(){
-
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-                //getFragmentManager().popBackStackImmediate();
-                //getFragmentManager().popBackStack();
-                //getActivity().getSupportFragmentManager().popBackStackImmediate();
-
-        }});
 
         return view;
     }

@@ -29,12 +29,16 @@ import com.affectiva.android.affdex.sdk.detector.Face;
 import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.asyncTasks.LoadYTVideoAsyncTask;
 import com.example.jp.projectofinal.dataModels.SaveToFile;
+import com.example.jp.projectofinal.dataModels.ValuesToStore;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is a very bare sample app to demonstrate the usage of the CameraDetector object from Affectiva.
@@ -165,8 +169,14 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         skipButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-                stopDetector();
-                sv.saveList();
+                List<ValuesToStore> list = sv.valuesList.get("Joao");
+                if(list != null){
+                    Log.e("tamanho - ", String.valueOf(list.size()));
+                    if( list.size() > 100){
+                        stopDetector();
+                        sv.saveList();
+                    }
+                }
             }
         });
 
