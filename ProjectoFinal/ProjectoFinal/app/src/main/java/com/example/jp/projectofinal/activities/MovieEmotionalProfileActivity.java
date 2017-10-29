@@ -32,6 +32,15 @@ import java.util.Map;
 public class MovieEmotionalProfileActivity extends AppCompatActivity {
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_movierofile_list);
+
+        getFragment(savedInstanceState);
+    }
+
+
     private void getFragment(Bundle savedInstanceState){
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -53,13 +62,6 @@ public class MovieEmotionalProfileActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_movierofile_list);
-
-        getFragment(savedInstanceState);
-    }
 
     /*
     @Override

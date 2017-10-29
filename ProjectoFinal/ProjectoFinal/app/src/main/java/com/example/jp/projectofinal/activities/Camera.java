@@ -167,7 +167,6 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
                 // Code here executes on main thread after user presses button
                 stopDetector();
                 sv.saveList();
-
             }
         });
 
@@ -239,10 +238,7 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
         player.setPlaybackEventListener(playbackEventListener);
-        if(this.enableRec)
-            player.setShowFullscreenButton(true);
-        else
-            player.setShowFullscreenButton(false);
+        player.setShowFullscreenButton(false);
         player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
         if (!wasRestored) {
             new LoadYTVideoAsyncTask().execute(player);
@@ -282,7 +278,6 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
     void stopDetector() {
         if (detector.isRunning()) {
             detector.stop();
-
         }
     }
 
@@ -359,8 +354,8 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             // Called when playback starts, either due to user action or call to play().
             showMessage("Playing Facial Recognition");
             //imageViewPlayControl.setImageResource(R.drawable.on_small);
-            if(this.enableRec)
-                imageViewPlayControl.setImageResource(R.drawable.on_small);
+            //if(this.enableRec)
+            imageViewPlayControl.setImageResource(R.drawable.on_small);
             startDetector();
         }
 
@@ -368,8 +363,8 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
         public void onPaused() {
             // Called when playback is paused, either due to user action or call to pause().
             showMessage("Paused Facial Recognition");
-            if(this.enableRec)
-                imageViewPlayControl.setImageResource(R.drawable.of_small);
+            //if(this.enableRec)
+            imageViewPlayControl.setImageResource(R.drawable.of_small);
             stopDetector();
         }
 

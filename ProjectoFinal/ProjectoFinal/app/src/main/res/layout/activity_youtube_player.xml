@@ -11,15 +11,26 @@
         android:paddingBottom="8dp"
         android:id="@+id/linearLayoutTest"
         android:layout_width="match_parent"
+        android:orientation="horizontal"
         android:layout_height="70dp">
 
         <ImageView
             android:id="@+id/imageViewPlayControl"
             android:layout_alignParentRight="true"
             android:layout_marginRight="6dp"
+            android:layout_marginTop="12dp"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/of_small" />
+
+        <Button
+            android:id="@+id/skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/imageViewPlayControl"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="35dp"
+            android:text="SKIP" />
 
     </RelativeLayout>
 
@@ -29,13 +40,5 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/linearLayoutTest"/>
 
-    <Button
-        android:id="@+id/skip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/youtube_player"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="35dp"
-        android:text="Skip" />
 
 </RelativeLayout>

@@ -1,8 +1,10 @@
 package com.example.jp.projectofinal.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.fragments.FavoritesListFragment;
@@ -17,6 +19,7 @@ public class FavoritesActivity extends AppCompatActivity
             FavoritesListFragment.databaseEmpty {
 
     private static final String TAG = "MOVIE_TITLE";
+    public int frag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,34 @@ public class FavoritesActivity extends AppCompatActivity
         getFragment(savedInstanceState);
     }
 
+    /*
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (frag == 1) {
+                    setContentView(R.layout.fragment_suggestion_details);
+                    MovieInfoFragment dailyListFragment = new MovieInfoFragment();
+
+                    // In case this activity was started with special instructions from an
+                    // Intent, pass the Intent's extras to the fragment as arguments
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.layout_container_movie_details_fragment, dailyListFragment)
+                            .addToBackStack(null)
+                            .commit();
+                    frag = 0;
+
+                }else{
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    */
     private void getFragment(Bundle savedInstanceState){
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -37,6 +68,7 @@ public class FavoritesActivity extends AppCompatActivity
             if (savedInstanceState != null) {
                 return;
             }
+           // frag = 0;
 
             // Create a new Fragment to be placed in the activity layout
             FavoritesListFragment dailyListFragment = new FavoritesListFragment();
@@ -55,9 +87,12 @@ public class FavoritesActivity extends AppCompatActivity
         MovieInfoFragment detailsFragment = new MovieInfoFragment();
         Bundle args = new Bundle();
         args.putString(TAG, s);
+
         // In case this activity was started with special instructions from an
         // Intent, pass the Intent's extras to the fragment as arguments
         detailsFragment.setArguments(args);
+
+        //frag = 1;
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()

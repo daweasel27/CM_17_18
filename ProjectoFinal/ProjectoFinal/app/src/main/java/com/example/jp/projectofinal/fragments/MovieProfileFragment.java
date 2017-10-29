@@ -2,6 +2,7 @@ package com.example.jp.projectofinal.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,11 +27,18 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by TiagoHenriques on 17/10/2017.
@@ -43,6 +51,7 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
 
     private ListView listView;
     private MyAdapter myAdapter;
+    private String[] resultStrs;
 
     final List<ToFirebase> mJournalEntries = new ArrayList<>();
     final HashMap<String, List<ToFirebase>> listMovies = new HashMap<>();
@@ -60,48 +69,149 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movierofile_list, container, false);
 
+
         getData();
 
-        final ArrayList<String> a = new ArrayList<>();
-        for (String dayEntry : listFinal.keySet()) {
-            a.add(dayEntry);
-        }
+
+        //final ArrayList<String> a = new ArrayList<>();
+        //for (String dayEntry : listFinal.keySet()) {
+        //    a.add(dayEntry);
+        //}
 
 
         //arrayAdapter.clear();
+        /*
+        Log.e("conas", Integer.toString(this.resultStrs.length));
+        for(int i=0; i<this.resultStrs.length;i++){
+            Log.e("conas", this.resultStrs[i]);
+        }
+        */
+
+        /*
+        myAdapter = new MyAdapter(
+                getActivity(), // The current context (this activity)
+                new ArrayList<String>());
+
+        final String[] daysLabels = this.resultStrs;
+
+        // IMP...
+        myAdapter.clear();
+        for (String dayEntry : daysLabels) {
+            myAdapter.add(dayEntry);
+        }
 
 
         listView = (ListView) view.findViewById(R.id.list_view);
-        listView.setAdapter(new ArrayAdapter<String>(getActivity(), 0){
-            private View row;
-            private LayoutInflater inflater = getLayoutInflater();
-            private TextView tv;
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent)  {
-                row = inflater.inflate(R.layout.row_movie_profile, parent, false);
-                tv  = (TextView) row.findViewById(android.R.id.text1);
-                tv.setText(a.get(position));
-                return row;
-            }
-        });
+        listView.setAdapter(myAdapter);
+        */
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s = myAdapter.getItem(position).split("_")[0];
-                Context context = view.getContext();
-                Toast toast = Toast.makeText(context, s, Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
-
-        //returnValuesTestDB();
+        cenas();
 
         return view;
+    }
+
+    public void cenas(){
+        Log.e("cenas", "cenas");
+    }
+
+    public String[] getFavoriteMovies(){
+
+        return this.resultStrs;
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    public void getData(){
+        Log.e("getData", "getData");
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        database.child("movie").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot noteSnapshot: dataSnapshot.getChildren()){
+                    Log.e("firebase - ", noteSnapshot.child("valuesList").toString());
+                    noteSnapshot.getChildren().iterator();
+                    ToFirebase note = noteSnapshot.getValue(ToFirebase.class);
+                    mJournalEntries.add(note);
+                    if(!listMovies.containsKey(note.getMovieName())){
+                        List<ToFirebase> ne = new ArrayList<>();
+                        ne.add(note);
+                        listMovies.put(note.getMovieName(), ne);
+                    }
+                    else {
+                        List<ToFirebase> ne = listMovies.get(note.getMovieName());
+                        listMovies.remove(note.getMovieName());
+                        ne.add(note);
+                        listMovies.put(note.getMovieName(), ne);
+                    }
+                }
+                avg();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //Log.d(LOG_TAG, databaseError.getMessage());
+            }
+        });
+    }
+
+    public void avg(){
+        Iterator it = listMovies.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, List<ToFirebase>> pair = (Map.Entry)it.next();
+            List<ToFirebase> ls = pair.getValue();
+            HashMap<String,Double> le = new HashMap<>();
+            for(ToFirebase tf : ls){
+                for(String ke :tf.getValuesList().keySet()){
+                    if(!le.containsKey(ke)){
+                        le.put(ke,tf.getValuesList().get(ke));
+                    }
+                    else{
+                        le.put(ke,tf.getValuesList().get(ke)+le.get(ke));
+                    }
+                }
+            }
+            ArrayList<EmotionValues> listE = new ArrayList<>();
+            for(String ke : le.keySet()){
+                listE.add(new EmotionValues(ke,le.get(ke)/ls.size()));
+            }
+            this.listFinal.put(pair.getKey(),listE);
+        }
+
+        this.resultStrs = new String[this.listFinal.size()];
+
+        int i=0;
+        for(String ke : this.listFinal.keySet()){
+            Log.e("final result -",ke);
+            String cenas="";
+            for(EmotionValues e: this.listFinal.get(ke)){
+                Log.e("TESTE - " , e.getName() + " --- " + e.getValue());
+                cenas += e.getName() + "@" + e.getValue();
+            }
+            this.resultStrs[i] = ke+":"+cenas;
+            Log.e("UIUIUI", this.resultStrs[i]);
+            i++;
+        }
+
+        Log.d("tropa", Integer.toString(this.resultStrs.length));
+
+        writeToFile(this.resultStrs, getContext());
+
+    }
+
+
+    public void writeToFile(String data[],Context context){
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("movie_profiles.txt", Context.MODE_PRIVATE));
+            for(int i=0; i<data.length; i++)
+                outputStreamWriter.write(data[i]+"\n");
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 /*
     // Container Activity must implement this interface
@@ -206,85 +316,28 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
             LayoutInflater inflater = (LayoutInflater) context
                     .getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View rowView = inflater.inflate(R.layout.row_movie_profile, parent, false);
+            View rowView = inflater.inflate(R.layout.row, parent, false);
 
-            //ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             TextView myTitle = (TextView) rowView.findViewById(R.id.text1);
-            //TextView myDescription = (TextView) rowView.findViewById(R.id.text2);
+            TextView myDescription = (TextView) rowView.findViewById(R.id.text2);
 
             //String description[] = values.get(position).split("_");
 
-            myTitle.setText(values.get(position));
+            imageView.setImageResource(R.drawable.deadpool2);
+
+            String movieValues[] = values.get(position).split(":");
+
+            myTitle.setText(movieValues[0]);
+            myDescription.setText("");
+
+            //myTitle.setText(values.get(position));
+            //myDescription.setText(values.get(position));
             //myDescription.setText("");
             Log.e("olaaaaaaaaaaaaaaaa " , values.get(position));
             //new ImageLoadTaskFavorites("https://www.subaru-global.com/technology/images/technology/drivetrain_awd/img07.jpg", imageView).execute();
 
             return rowView;
-        }
-    }
-
-    public void getData(){
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        database.child("movie").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot noteSnapshot: dataSnapshot.getChildren()){
-                    Log.e("firebase - ", noteSnapshot.child("valuesList").toString());
-                    noteSnapshot.getChildren().iterator();
-                    ToFirebase note = noteSnapshot.getValue(ToFirebase.class);
-                    mJournalEntries.add(note);
-                    if(!listMovies.containsKey(note.getMovieName())){
-                        List<ToFirebase> ne = new ArrayList<>();
-                        ne.add(note);
-                        listMovies.put(note.getMovieName(), ne);
-                    }
-                    else {
-                        List<ToFirebase> ne = listMovies.get(note.getMovieName());
-                        listMovies.remove(note.getMovieName());
-                        ne.add(note);
-                        listMovies.put(note.getMovieName(), ne);
-                    }
-                }
-                avg();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //Log.d(LOG_TAG, databaseError.getMessage());
-            }
-        });
-    }
-
-    public void avg(){
-        Iterator it = listMovies.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, List<ToFirebase>> pair = (Map.Entry)it.next();
-            List<ToFirebase> ls = pair.getValue();
-            HashMap<String,Double> le = new HashMap<>();
-            for(ToFirebase tf : ls){
-                for(String ke :tf.getValuesList().keySet()){
-                    if(!le.containsKey(ke)){
-                        le.put(ke,tf.getValuesList().get(ke));
-                    }
-                    else{
-                        le.put(ke,tf.getValuesList().get(ke)+le.get(ke));
-                    }
-
-                }
-            }
-            ArrayList<EmotionValues> listE = new ArrayList<>();
-            for(String ke : le.keySet()){
-                listE.add(new EmotionValues(ke,le.get(ke)/ls.size()));
-            }
-            listFinal.put(pair.getKey(),listE);
-
-
-        }
-        for(String ke : listFinal.keySet()){
-            Log.e("final result -",ke);
-            for(EmotionValues e: listFinal.get(ke)){
-                Log.e("result - " , e.getName() + " --- " + e.getValue());
-            }
         }
     }
 }
