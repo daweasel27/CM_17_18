@@ -1,6 +1,7 @@
 package com.example.jp.projectofinal.fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -49,13 +50,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class MovieProfileFragment extends Fragment implements View.OnClickListener {
 
-    private ListView listView;
-    private MyAdapter myAdapter;
-    private String[] resultStrs;
+    public ListView listView;
+    public MyAdapter myAdapter;
+    public String[] resultStrs;
 
-    final List<ToFirebase> mJournalEntries = new ArrayList<>();
-    final HashMap<String, List<ToFirebase>> listMovies = new HashMap<>();
-    final HashMap<String, List<EmotionValues>> listFinal = new HashMap<>();
+    public final List<ToFirebase> mJournalEntries = new ArrayList<>();
+    public final HashMap<String, List<ToFirebase>> listMovies = new HashMap<>();
+    public final HashMap<String, List<EmotionValues>> listFinal = new HashMap<>();
 
 
     public MovieProfileFragment() {
@@ -68,86 +69,75 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movierofile_list, container, false);
+        listView = (ListView) view.findViewById(R.id.list_view);
 
 
         getData();
 
-
-        //final ArrayList<String> a = new ArrayList<>();
-        //for (String dayEntry : listFinal.keySet()) {
-        //    a.add(dayEntry);
-        //}
-
-
-        //arrayAdapter.clear();
-        /*
-        Log.e("conas", Integer.toString(this.resultStrs.length));
-        for(int i=0; i<this.resultStrs.length;i++){
-            Log.e("conas", this.resultStrs[i]);
-        }
-        */
-
-        /*
-        myAdapter = new MyAdapter(
-                getActivity(), // The current context (this activity)
-                new ArrayList<String>());
-
-        final String[] daysLabels = this.resultStrs;
-
-        // IMP...
-        myAdapter.clear();
-        for (String dayEntry : daysLabels) {
-            myAdapter.add(dayEntry);
-        }
-
-
-        listView = (ListView) view.findViewById(R.id.list_view);
-        listView.setAdapter(myAdapter);
-        */
 
         cenas();
 
         return view;
     }
 
-    public void cenas(){
-        Log.e("cenas", "cenas");
-    }
-
-    public String[] getFavoriteMovies(){
-
-        return this.resultStrs;
-    }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    public void getData(){
+    public void getData() {
         Log.e("getData", "getData");
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         database.child("movie").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot noteSnapshot: dataSnapshot.getChildren()){
-                    Log.e("firebase - ", noteSnapshot.child("valuesList").toString());
-                    noteSnapshot.getChildren().iterator();
-                    ToFirebase note = noteSnapshot.getValue(ToFirebase.class);
-                    mJournalEntries.add(note);
-                    if(!listMovies.containsKey(note.getMovieName())){
-                        List<ToFirebase> ne = new ArrayList<>();
-                        ne.add(note);
-                        listMovies.put(note.getMovieName(), ne);
+
+                class data extends AsyncTask<DataSnapshot, Void, Void> {
+                    @Override
+                    protected Void doInBackground(DataSnapshot... voids) {
+                        for (DataSnapshot noteSnapshot: voids[0].getChildren()){
+                            Log.e("firebase - ", noteSnapshot.child("valuesList").toString());
+                            noteSnapshot.getChildren().iterator();
+                            ToFirebase note = noteSnapshot.getValue(ToFirebase.class);
+                            mJournalEntries.add(note);
+                            if(!listMovies.containsKey(note.getMovieName())){
+                                List<ToFirebase> ne = new ArrayList<>();
+                                ne.add(note);
+                                listMovies.put(note.getMovieName(), ne);
+                            }
+                            else {
+                                List<ToFirebase> ne = listMovies.get(note.getMovieName());
+                                listMovies.remove(note.getMovieName());
+                                ne.add(note);
+                                listMovies.put(note.getMovieName(), ne);
+                            }
+                        }
+                        avg();
+                        return null;
                     }
-                    else {
-                        List<ToFirebase> ne = listMovies.get(note.getMovieName());
-                        listMovies.remove(note.getMovieName());
-                        ne.add(note);
-                        listMovies.put(note.getMovieName(), ne);
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        // Start Activity C
+                        final ArrayList<String> a = new ArrayList<>();
+                        for (String dayEntry : listFinal.keySet()) {
+                            a.add(dayEntry);
+                        }
+
+                        myAdapter = new MyAdapter(
+                                getActivity(), // The current context (this activity)
+                                new ArrayList<String>());
+
+                        final String[] daysLabels = resultStrs;
+
+                        myAdapter.clear();
+                        for (String dayEntry : daysLabels) {
+                            myAdapter.add(dayEntry);
+                        }
+
+
+                        listView.setAdapter(myAdapter);
                     }
                 }
-                avg();
+
+                new data().execute(dataSnapshot);
+
             }
 
             @Override
@@ -155,6 +145,7 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
                 //Log.d(LOG_TAG, databaseError.getMessage());
             }
         });
+
     }
 
     public void avg(){
@@ -177,27 +168,27 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
             for(String ke : le.keySet()){
                 listE.add(new EmotionValues(ke,le.get(ke)/ls.size()));
             }
-            this.listFinal.put(pair.getKey(),listE);
+            listFinal.put(pair.getKey(),listE);
         }
 
-        this.resultStrs = new String[this.listFinal.size()];
+        resultStrs = new String[listFinal.size()];
 
         int i=0;
-        for(String ke : this.listFinal.keySet()){
+        for(String ke : listFinal.keySet()){
             Log.e("final result -",ke);
             String cenas="";
-            for(EmotionValues e: this.listFinal.get(ke)){
+            for(EmotionValues e: listFinal.get(ke)){
                 Log.e("TESTE - " , e.getName() + " --- " + e.getValue());
                 cenas += e.getName() + "@" + e.getValue();
             }
-            this.resultStrs[i] = ke+":"+cenas;
-            Log.e("UIUIUI", this.resultStrs[i]);
+            resultStrs[i] = ke+":"+cenas;
+            Log.e("UIUIUI", resultStrs[i]);
             i++;
         }
 
-        Log.d("tropa", Integer.toString(this.resultStrs.length));
+        Log.d("tropa", Integer.toString(resultStrs.length));
 
-        writeToFile(this.resultStrs, getContext());
+        writeToFile(resultStrs, getContext());
 
     }
 
@@ -213,87 +204,21 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
-/*
-    // Container Activity must implement this interface
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof databaseEmpty && context instanceof OnMovieSelectedListener) {
-            mListener = (OnMovieSelectedListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnDaySelectedListener");
-        }
+
+    public void cenas(){
+        Log.e("cenas", "cenas");
     }
 
-    public static String[] getFavoriteMovies(){
+    public String[] getFavoriteMovies(){
 
-        db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.query(
-                MovieContract.MovieEntry.TABLE_NAME, //Table to Query
-                null, // all columns
-                null, // Columns for the "where" clause //selection
-                null, // Values for the "where" clause
-                null, // columns to group by
-                null, // columns to filter by row groups
-                null // sort order
-        );
-
-        String[] resultStrs = new String[getNumberDBRows()];
-
-        if (cursor.moveToFirst()) {
-            do {
-                Log.i(LOG_TAG, "Retrieving entry position : " + cursor.getColumnIndex(MovieContract.MovieEntry._ID));
-                int columnTitle = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
-                String title = cursor.getString(columnTitle);
-                Log.i(LOG_TAG, "Retrieving entry title: " + title);
-                int columnYear = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_YEAR);
-                String year = cursor.getString(columnYear);
-                Log.i(LOG_TAG, "Retrieving entry year: " + year);
-                int columnRat = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING);
-                String rating = cursor.getString(columnRat);
-                Log.i(LOG_TAG, "Retrieving entry rating: " + rating);
-                int columnThumb = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER);
-                String thumb = cursor.getString(columnThumb);
-                Log.i(LOG_TAG, "Retrieving entry thumb: " + thumb);
-                resultStrs[cursor.getPosition()] =  title + "_" + year + "_" + rating + "_" + thumb;
-            } while (cursor.moveToNext());
-        } else {
-            Log.i(LOG_TAG, "No results from Location table!");
-        }
-
-        cursor.close();
-        db.close();
-
-        return resultStrs;
-    }
-    */
-
-
-    //private String [] getFavoriteMoviesFromDB() {
-        /* Disable Strict Mode - Temporary Solution */
-/*        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        String[] movies = getFavoriteMovies();
-
-        return movies;
+        return this.resultStrs;
     }
 
     @Override
     public void onClick(View v) {
 
     }
-
-    public interface OnMovieSelectedListener {
-        public void onMovieSelected(String s);
-    }
-
-    public interface databaseEmpty {
-        public void onDatabaseFragment();
-    }
-*/
+    
     public class MyAdapter extends ArrayAdapter<String> {
 
         private Context context;
@@ -340,5 +265,10 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
             return rowView;
         }
     }
-}
+
+
+
+
+    }
+
 
