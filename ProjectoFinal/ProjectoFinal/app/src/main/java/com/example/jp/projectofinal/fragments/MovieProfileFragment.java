@@ -70,12 +70,7 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movierofile_list, container, false);
         listView = (ListView) view.findViewById(R.id.list_view);
-
-
         getData();
-
-
-        cenas();
 
         return view;
     }
@@ -123,12 +118,14 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
                         myAdapter = new MyAdapter(
                                 getActivity(), // The current context (this activity)
                                 new ArrayList<String>());
-
                         final String[] daysLabels = resultStrs;
 
                         myAdapter.clear();
+
                         for (String dayEntry : daysLabels) {
+
                             myAdapter.add(dayEntry);
+
                         }
 
 
@@ -179,9 +176,9 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
             String cenas="";
             for(EmotionValues e: listFinal.get(ke)){
                 Log.e("TESTE - " , e.getName() + " --- " + e.getValue());
-                cenas += e.getName() + "@" + e.getValue();
+                cenas += "@" + e.getName() + "@" + e.getValue();
             }
-            resultStrs[i] = ke+":"+cenas;
+            resultStrs[i] = ke +cenas;
             Log.e("UIUIUI", resultStrs[i]);
             i++;
         }
@@ -205,20 +202,12 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    public void cenas(){
-        Log.e("cenas", "cenas");
-    }
-
-    public String[] getFavoriteMovies(){
-
-        return this.resultStrs;
-    }
 
     @Override
     public void onClick(View v) {
 
     }
-    
+
     public class MyAdapter extends ArrayAdapter<String> {
 
         private Context context;
@@ -251,10 +240,13 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
 
             imageView.setImageResource(R.drawable.deadpool2);
 
-            String movieValues[] = values.get(position).split(":");
+            String movieValues[] = values.get(position).split("@");
 
-            myTitle.setText(movieValues[0]);
-            myDescription.setText("");
+            myTitle.setText(movieValues[0].split("-")[0]);
+            myDescription.setText(movieValues[1] + " - " + movieValues[2] + "\n"
+                                + movieValues[3] + " - " + movieValues[4] + "\n"
+                                + movieValues[5] + " - " + movieValues[6] + "\n"
+                                + movieValues[7] + " - " + movieValues[8] + "\n");
 
             //myTitle.setText(values.get(position));
             //myDescription.setText(values.get(position));
