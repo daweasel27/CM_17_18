@@ -8,8 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -34,7 +37,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
-
+import android.support.v4.app.FragmentManager;
 /**
  * Created by Utilizador on 26/10/2017.
  */
@@ -87,6 +90,7 @@ public class MovieSuggestionFragment extends Fragment {
 
         dbHelper = new MovieDbHelper(getActivity());
 
+
         imageView = (ImageView) view.findViewById(R.id.imageViewMovie);
         imageButtonHeart = (ImageButton) view.findViewById(R.id.imageViewHeartSuggestion);
         textViewTitle = (TextView) view.findViewById(R.id.textViewTitle);
@@ -123,12 +127,15 @@ public class MovieSuggestionFragment extends Fragment {
 
             public void onClick(View view) {
                 getActivity().onBackPressed();
-                //getActivity().getSupportFragmentManager().popBackStack();
+                //getFragmentManager().popBackStackImmediate();
+                //getFragmentManager().popBackStack();
+                //getActivity().getSupportFragmentManager().popBackStackImmediate();
 
         }});
 
         return view;
     }
+
 
 
     public void addTestDB(){

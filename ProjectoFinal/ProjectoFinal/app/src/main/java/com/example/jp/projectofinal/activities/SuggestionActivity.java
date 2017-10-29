@@ -1,9 +1,16 @@
 package com.example.jp.projectofinal.activities;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.dataModels.MovieInfo;
@@ -23,8 +30,11 @@ public class SuggestionActivity extends AppCompatActivity
         implements SuggestionListFragment.OnMovieSelectedListener
          {
              ArrayList<MovieInfo> list;
+
+             public int frag = 0;
     private final static String MOVIE_ID_TAG = "MOVIE_ID_TAG";
-    //private TextView textViewTest;
+             private ActionBar actionBar;
+             //private TextView textViewTest;
 
 
     public ArrayList<MovieInfo> getList() {
@@ -36,6 +46,13 @@ public class SuggestionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_suggestion_list);
 
+        actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        // TODO: Remove the redundant calls to getSupportActionBar()
+        //       and use variable actionBar instead
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         Intent intent = getIntent();
         list = (ArrayList<MovieInfo>) intent.getSerializableExtra("arg_key");
         for(MovieInfo movie : list){
@@ -43,6 +60,7 @@ public class SuggestionActivity extends AppCompatActivity
         }
         getFragment(savedInstanceState);
     }
+
 
     private void getFragment(Bundle savedInstanceState){
         // Check that the activity is using the layout version with
@@ -55,13 +73,16 @@ public class SuggestionActivity extends AppCompatActivity
             if (savedInstanceState != null) {
                 return;
             }
+            frag = 0;
 
             // Create a new Fragment to be placed in the activity layout
             SuggestionListFragment dailyListFragment = new SuggestionListFragment(list);
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.layout_suggestions_list_fragment, dailyListFragment).commit();
+                    .add(R.id.layout_suggestions_list_fragment, dailyListFragment)
+                        .addToBackStack(null)
+                            .commit();
         }
     }
 
@@ -87,9 +108,28 @@ public class SuggestionActivity extends AppCompatActivity
          // Intent, pass the Intent's extras to the fragment as arguments
          detailsFragment.setArguments(args);
 
+        frag = 1;
+
          // Add the fragment to the 'fragment_container' FrameLayout
          getSupportFragmentManager().beginTransaction()
-                 .replace(R.id.layout_container_movie_details_fragment, detailsFragment).commit();
+                 .add(R.id.layout_container_movie_details_fragment, detailsFragment)
+                    .commit();
+     }
+
+     @Override
+     public void onBackPressed() {
+
+         if (frag == 1){
+             setContentView(R.layout.fragment_suggestion_list);
+             SuggestionListFragment dailyListFragment = new SuggestionListFragment(list);
+             getSupportFragmentManager().beginTransaction()
+                     .replace(R.id.layout_suggestions_list_fragment, dailyListFragment)
+                        .addToBackStack(null)
+                            .commit();
+             frag = 0;
+         } else {
+             //super.onBackPressed();
+         }
      }
 
  }

@@ -2,7 +2,10 @@ package com.example.jp.projectofinal.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.dataModels.MovieInfo;
@@ -25,6 +28,8 @@ public class MovieSuggInfoActivity extends AppCompatActivity {
 
         getFragment(savedInstanceState);
     }
+
+
 
     private void getFragment(Bundle savedInstanceState){
         if (findViewById(R.id.layout_container_movie_details_fragment) != null) {
