@@ -54,10 +54,6 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
     public MyAdapter myAdapter;
     public String[] resultStrs;
 
-    private static final int VIEW_TYPE_TODAY = 0;
-    private static final int VIEW_TYPE_FUTURE_DAY = 1;
-    private boolean mUseTodayLayout;
-
     public final List<ToFirebase> mJournalEntries = new ArrayList<>();
     public final HashMap<String, List<ToFirebase>> listMovies = new HashMap<>();
     public final HashMap<String, List<EmotionValues>> listFinal = new HashMap<>();
@@ -131,14 +127,6 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
                         }
 
                         listView.setAdapter(myAdapter);
-
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                String s = myAdapter.getItem(position);
-
-                            }
-                        });
-
                     }
                 }
 
@@ -224,8 +212,33 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
 
             View rowView = inflater.inflate(R.layout.row_movie_profile, parent, false);
 
+            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             TextView myTitle = (TextView) rowView.findViewById(R.id.text1);
             TextView myDescription = (TextView) rowView.findViewById(R.id.text2);
+
+            Log.e("NOSA", Integer.toString(position));
+
+            switch (position){
+                case 0:
+                    imageView.setImageResource(R.drawable.tomb);
+                    break;
+                case 1:
+                    imageView.setImageResource(R.drawable.it);
+                    break;
+                case 2:
+                    imageView.setImageResource(R.drawable.blockers);
+                    break;
+                case 3:
+                    imageView.setImageResource(R.drawable.peter);
+                    break;
+                case 4:
+                    imageView.setImageResource(R.drawable.red);
+                    break;
+                default:
+                    imageView.setImageResource(R.drawable.tomb);
+                    break;
+            }
+
 
             String movieValues[] = values.get(position).split("@");
 
@@ -238,9 +251,6 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
             return rowView;
         }
     }
-
-
-
 
     }
 

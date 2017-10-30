@@ -193,13 +193,13 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             public void onMeasure(int widthSpec, int heightSpec) {
                 int measureWidth;
                 int measureHeight;
-                if(enableRec){
-                    measureWidth = 200;
-                    measureHeight = 350;
-                }else{
-                    measureWidth = 0;
-                    measureHeight = 0;
-                }
+                //if(enableRec){
+                measureWidth = 200;
+                measureHeight = 350;
+                //}else{
+                //    measureWidth = 0;
+                //    measureHeight = 0;
+                //}
                 int width;
                 int height;
                 if (previewHeight == 0 || previewWidth == 0) {
@@ -227,8 +227,13 @@ public class Camera extends YouTubeBaseActivity implements Detector.ImageListene
             params.addRule(RelativeLayout.ALIGN_LEFT);
         else
             params.setMargins(60, 0,0, 0);
+
+        if(!this.enableRec)
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
         cameraPreview.setLayoutParams(params);
         mainLayout.addView(cameraPreview, 0);
+
         //mainLayout.bringChildToFront(cameraPreview); // To put facial rec on the front - it pause the video
 
         detector = new CameraDetector(this, CameraDetector.CameraType.CAMERA_FRONT, cameraPreview);
