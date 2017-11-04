@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,16 @@ import com.example.jp.projectofinal.R;
 import com.example.jp.projectofinal.asyncTasks.ImageLoadTaskFavorites;
 import com.example.jp.projectofinal.dataModels.EmotionValues;
 import com.example.jp.projectofinal.dataModels.ToFirebase;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.RadarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -212,11 +223,10 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
 
             View rowView = inflater.inflate(R.layout.row_movie_profile, parent, false);
 
+            HorizontalBarChart chart = (HorizontalBarChart) rowView.findViewById(R.id.chart);
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             TextView myTitle = (TextView) rowView.findViewById(R.id.text1);
             TextView myDescription = (TextView) rowView.findViewById(R.id.text2);
-
-            Log.e("NOSA", Integer.toString(position));
 
             switch (position){
                 case 0:
@@ -238,15 +248,42 @@ public class MovieProfileFragment extends Fragment implements View.OnClickListen
                     imageView.setImageResource(R.drawable.tomb);
                     break;
             }
-
-
             String movieValues[] = values.get(position).split("@");
 
+
+            ArrayList<String> labels = new ArrayList<String>();
+            labels.add(movieValues[7]);
+            labels.add(movieValues[5]);
+            labels.add(movieValues[3]);
+            labels.add(movieValues[1]);
+
+
+            HashMap<String, Double> data = new HashMap<>();
+            data.put(movieValues[1], Double.valueOf(movieValues[2]));
+            data.put(movieValues[3], Double.valueOf(movieValues[4]));
+            data.put(movieValues[5], Double.valueOf(movieValues[6]));
+            data.put(movieValues[7], Double.valueOf(movieValues[8]));
+
+            ArrayList<BarEntry> valueSet1 = new ArrayList<>();
+
+            valueSet1.add(new BarEntry(Double.valueOf(movieValues[2]).floatValue(), 0));
+            valueSet1.add(new BarEntry(Double.valueOf(movieValues[4]).floatValue(), 1));
+            valueSet1.add(new BarEntry(Double.valueOf(movieValues[6]).floatValue(), 2));
+            valueSet1.add(new BarEntry(Double.valueOf(movieValues[8]).floatValue(), 3));
+
+
+
+            BarDataSet dataSet = new BarDataSet( valueSet1, "Label"); // add entries to dataset
+            BarData lineData = new BarData(labels, dataSet);
+            chart.setData(lineData);
+            chart.invalidate(); // refresh
+
             myTitle.setText(movieValues[0].split("-")[0]);
-            myDescription.setText(movieValues[1] + " - " + movieValues[2] + "\n"
+            myDescription.setText("");
+           /* myDescription.setText(movieValues[1] + " - " + movieValues[2] + "\n"
                                 + movieValues[3] + " - " + movieValues[4] + "\n"
                                 + movieValues[5] + " - " + movieValues[6] + "\n"
-                                + movieValues[7] + " - " + movieValues[8] + "\n");
+                                + movieValues[7] + " - " + movieValues[8] + "\n");*/
 
             return rowView;
         }
