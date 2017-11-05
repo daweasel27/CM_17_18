@@ -32,7 +32,8 @@ public class SuggestionActivity extends AppCompatActivity
              ArrayList<MovieInfo> list;
 
              public int frag = 0;
-    private final static String MOVIE_ID_TAG = "MOVIE_ID_TAG";
+             private final static String MOVIE_ID_TAG = "MOVIE_ID_TAG";
+             private final static String LIST_TAG = "LIST_TAG";
              private ActionBar actionBar;
              //private TextView textViewTest;
 
@@ -47,7 +48,13 @@ public class SuggestionActivity extends AppCompatActivity
              case android.R.id.home:
                  if (frag == 1){
                      setContentView(R.layout.fragment_suggestion_list);
-                     SuggestionListFragment dailyListFragment = new SuggestionListFragment(list);
+                     SuggestionListFragment dailyListFragment = new SuggestionListFragment();
+                     Bundle args = new Bundle();
+                     args.putParcelableArrayList(LIST_TAG, list);
+                     //args.putInt(MOVIE_ID_TAG, s);
+                     // In case this activity was started with special instructions from an
+                     // Intent, pass the Intent's extras to the fragment as arguments
+                     dailyListFragment.setArguments(args);
                      getSupportFragmentManager().beginTransaction()
                              .replace(R.id.layout_suggestions_list_fragment, dailyListFragment)
                              .addToBackStack(null)
@@ -100,7 +107,16 @@ public class SuggestionActivity extends AppCompatActivity
             frag = 0;
 
             // Create a new Fragment to be placed in the activity layout
-            SuggestionListFragment dailyListFragment = new SuggestionListFragment(list);
+            //SuggestionListFragment dailyListFragment = new SuggestionListFragment(list);
+
+            SuggestionListFragment dailyListFragment = new SuggestionListFragment();
+
+            Bundle args = new Bundle();
+            args.putParcelableArrayList(LIST_TAG, list);
+            //args.putInt(MOVIE_ID_TAG, s);
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            dailyListFragment.setArguments(args);
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()

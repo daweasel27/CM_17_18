@@ -48,9 +48,14 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
     private ListView listView;
     private MyAdapter myAdapter;
     ArrayList<MovieInfo> list;
+    private final static String LIST_TAG = "LIST_TAG";
+
+    /*
     public SuggestionListFragment(ArrayList<MovieInfo> list) {
         this.list = list;
     }
+    */
+
     public SuggestionListFragment() {
         this.list = list;
     }
@@ -60,7 +65,8 @@ public class SuggestionListFragment extends Fragment implements View.OnClickList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_suggestion_list, container, false);
 
-
+        Bundle bundle = getArguments();
+        this.list = bundle.getParcelableArrayList(LIST_TAG);
 
         myAdapter = new MyAdapter(
                 getActivity(),

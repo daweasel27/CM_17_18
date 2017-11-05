@@ -29,7 +29,7 @@ public class MovieSuggestionInfoFragment extends Fragment implements View.OnClic
 
     private static final String TAG = "MOVIE_TITLE";
     private static final String LOG_TAG = "LOG_TAG";
-    private MovieInfo mi;
+    //private MovieInfo mi;
 
     // Layout file
     private ImageView imageViewMovie;
@@ -43,9 +43,11 @@ public class MovieSuggestionInfoFragment extends Fragment implements View.OnClic
         // Required empty public constructor
     }
 
+    /*
     public MovieSuggestionInfoFragment(MovieInfo mi) {
         this.mi = mi;
     }
+    */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
