@@ -33,6 +33,11 @@
             android:layout_marginLeft="30dp"
             android:text="TextView" />
 
+        <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/chart"
+            android:layout_width="230dp"
+            android:layout_height="250dp"/>
+
     </LinearLayout>
 
 </LinearLayout>

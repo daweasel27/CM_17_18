@@ -25,7 +25,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile files('libs/YouTubeAndroidPlayerApi.jar')
-
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
     compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.affectiva.android:affdexsdk:3.1.1'
